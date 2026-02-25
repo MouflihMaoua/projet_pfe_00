@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '../../utils/cn';
 import { Routes, Route, Navigate, Link } from 'react-router-dom';
+import NavbarArtisan from '../../components/artisan/NavbarArtisan';
 import Sidebar from '../../components/common/Sidebar';
 import { Bell, Search, DollarSign, Star, Briefcase, ThumbsUp, TrendingUp, ChevronRight, MessageSquare, Calendar } from 'lucide-react';
 import NotificationBell from '../../components/ui/NotificationBell';
@@ -289,47 +290,10 @@ const ArtisanSettings = () => (
 const ArtisanDashboard = () => {
     return (
         <div className="min-h-screen bg-brand-offwhite font-sans selection:bg-brand-orange selection:text-white">
+            <NavbarArtisan userName="Ahmed Mansouri" userStatus="Expert Plomberie" />
             <Sidebar role="artisan" />
 
-            <div className="pl-80">
-                <header className="h-28 bg-white/70 backdrop-blur-2xl border-b border-gray-100/50 flex items-center justify-between px-16 sticky top-0 z-40">
-                    <div className="flex items-center gap-8">
-                        <div className="flex items-center gap-4 bg-emerald-500/10 px-8 py-3.5 rounded-2xl border border-emerald-500/20">
-                            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
-                            <span className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em]">En ligne</span>
-                        </div>
-
-                        <div className="relative hidden xl:block">
-                            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
-                            <input type="text" placeholder="Rechercher un dossier, un client..." className="w-96 h-14 pl-16 pr-8 bg-gray-50/50 rounded-2xl text-[11px] font-bold outline-none border border-transparent focus:border-brand-navy focus:bg-white transition-all underline-offset-4" />
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-12">
-                        <div className="flex gap-4">
-                            <button className="w-14 h-14 bg-gray-50 text-gray-400 rounded-2xl flex items-center justify-center hover:bg-brand-navy hover:text-white transition-all duration-500">
-                                <DollarSign size={20} />
-                            </button>
-                            <NotificationBell />
-                        </div>
-
-                        <div className="flex items-center gap-6 pl-10 border-l border-gray-100">
-                            <div className="text-right hidden sm:block">
-                                <p className="text-sm font-black text-brand-navy font-heading tracking-tight mb-0.5">Ahmed Mansouri</p>
-                                <p className="text-[9px] text-brand-orange font-black uppercase tracking-[0.3em]">Expert Plomberie</p>
-                            </div>
-                            <div className="relative">
-                                <img
-                                    src="https://images.unsplash.com/photo-1540324155974-7523202daa3f?w=100"
-                                    className="w-16 h-16 rounded-2xl object-cover ring-4 ring-gray-50 shadow-xl"
-                                    alt="Avatar"
-                                />
-                                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 border-4 border-white rounded-full" />
-                            </div>
-                        </div>
-                    </div>
-                </header>
-
+            <div className="pt-16 pl-80">
                 <main className="p-16 max-w-[1600px] mx-auto min-h-[calc(100vh-112px)]">
                     <Routes>
                         <Route path="/" element={<ArtisanHome />} />

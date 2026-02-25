@@ -14,7 +14,8 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
         // Rediriger vers le dashboard approprié si le rôle n'est pas autorisé
         const redirectPath = role === 'admin' ? '/admin' :
             role === 'artisan' ? '/dashboard/artisan' :
-                '/dashboard/client';
+                role === 'particulier' ? '/dashboard/particulier' :
+                    '/dashboard/client';
         return <Navigate to={redirectPath} replace />;
     }
 

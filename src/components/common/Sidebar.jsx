@@ -24,10 +24,10 @@ const Sidebar = ({ role, isMobileOpen = false, onMobileClose = () => {} }) => {
 
     const menuItems = {
         client: [
-            { name: 'Vue d\'ensemble', icon: LayoutDashboard, path: '/dashboard/client' },
-            { name: 'Mes Missions', icon: Calendar, path: '/dashboard/client/missions' },
-            { name: 'Discussions', icon: MessageSquare, path: '/dashboard/client/messages' },
-            { name: 'Profil Client', icon: User, path: '/dashboard/client/profil' },
+            { name: 'Vue d\'ensemble', icon: LayoutDashboard, path: '/dashboard/particulier' },
+            { name: 'Mes Missions', icon: Calendar, path: '/dashboard/particulier/missions' },
+            { name: 'Discussions', icon: MessageSquare, path: '/dashboard/particulier/messages' },
+            { name: 'Mon Profil', icon: User, path: '/dashboard/particulier/profil' },
         ],
         artisan: [
             { name: 'Espace Pro', icon: LayoutDashboard, path: '/dashboard/artisan' },
