@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link, Navigate, Routes, Route } from 'react-router-dom';
-import NavbarParticulier from '../../components/client/NavbarParticulier';
+import { Link, Navigate, Routes, Route, useLocation } from 'react-router-dom';
+// Navbar removed for dashboard (sidebar is primary navigation)
 import Sidebar from '../../components/common/Sidebar';
 import ToastContainer from '../../components/layout/ToastContainer';
 import ProfilPage from './ProfilPage';
@@ -104,8 +104,8 @@ const Styles = () => (
     .d3-label { font-size: 11px; font-weight: 700; color: ${C.text3}; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 7px; }
 
     /* layout */
-    .d3-layout { padding-top: 64px; padding-left: 280px; min-height: 100vh; }
-    @media (max-width: 1024px) { .d3-layout { padding-left: 0; } }
+    .d3-layout { padding-top: 0; padding-left: 280px; margin-left: 15px; min-height: 100vh; }
+    @media (max-width: 1024px) { .d3-layout { padding-left: 0; margin-left: 0; } }
 
     /* page-in animations */
     @keyframes pageIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
@@ -560,21 +560,45 @@ const ClientMessages = () => {
 const ClientDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { toasts, removeToast } = useToast();
+  const location = useLocation();
+
+  const getTitle = () => {
+    const p = location.pathname.replace('/dashboard/particulier', '') || '/';
+    switch (p) {
+      case '/missions': return 'Mes missions';
+      case '/messages': return 'Discussions';
+      case '/profil': return 'Mon profil';
+      case '/':
+      case '':
+      default: return "Vue d'ensemble";
+    }
+  };
 
   return (
     <div className="d3">
       <Styles />
-      <NavbarParticulier userName="Karim Bennani" userStatus="Client Or" />
       <Sidebar role="client" isMobileOpen={sidebarOpen} onMobileClose={() => setSidebarOpen(false)} />
 
       <div className="d3-layout">
         <main style={{ padding:'clamp(16px, 3vw, 28px)', maxWidth:'1300px', margin:'0 auto' }}>
+          {/* Internal header - minimal */}
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:18 }}>
+            <h1 style={{ margin:0, fontSize:'1.25rem', fontWeight:800 }}>{getTitle()}</h1>
+            <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+              <div style={{ textAlign:'right', marginRight:8 }}>
+                <div style={{ fontSize:13, fontWeight:800 }}>Karim Bennani</div>
+                <div style={{ fontSize:12, color:'#F97316' }}>Client</div>
+              </div>
+              <div style={{ width:40, height:40, borderRadius:10, background:'linear-gradient(135deg,#FB923C,#F97316)', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontWeight:800 }}>KB</div>
+            </div>
+          </div>
+
           <Routes>
-            <Route path="/"         element={<ClientHome />}     />
-            <Route path="/missions" element={<ClientMissions />}  />
-            <Route path="/messages" element={<ClientMessages />}  />
-            <Route path="/profil"   element={<ProfilPage />}      />
-            <Route path="*"         element={<Navigate to="" />}  />
+            <Route index element={<ClientHome />} />
+            <Route path="missions" element={<ClientMissions />} />
+            <Route path="messages" element={<ClientMessages />} />
+            <Route path="profil" element={<ProfilPage />} />
+            <Route path="*" element={<Navigate to="" />} />
           </Routes>
         </main>
       </div>

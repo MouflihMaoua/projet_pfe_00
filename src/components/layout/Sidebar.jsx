@@ -5,11 +5,12 @@
 // ============================================================
 
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, Briefcase, Calendar, Heart,
   User, Bell, HelpCircle, LogOut, Wrench,
 } from "lucide-react";
+import { useAuthStore } from "../../store/useAuthStore";
 
 // ── Mapping icon string → composant Lucide ─────────────────
 const iconMap = {
@@ -30,11 +31,14 @@ const navSections = [
   },
 ];
 
-/**
- * Sidebar
- * Props : aucune — navigation gérée par React Router
- */
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const logout = useAuthStore((state) => state.logout);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/connexion");
+  };
   return (
     <aside
       className="flex flex-col w-64 h-full flex-shrink-0"
@@ -106,7 +110,7 @@ const Sidebar = () => {
       {/* ── Footer sidebar : déconnexion ───────────────────── */}
       <div className="px-3 py-4 border-t border-white/5">
         <button
-          onClick={() => console.log("Déconnexion...")}
+          onClick={handleLogout}
           className="
             w-full flex items-center gap-3 px-3 py-2.5 rounded-xl
             text-sm font-medium text-slate-400

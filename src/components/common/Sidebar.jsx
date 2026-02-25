@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     LayoutDashboard,
     Calendar,
@@ -20,7 +20,13 @@ import { cn } from '../../utils/cn';
 
 const Sidebar = ({ role, isMobileOpen = false, onMobileClose = () => {} }) => {
     const location = useLocation();
+    const navigate = useNavigate();
     const logout = useAuthStore(state => state.logout);
+
+    const handleLogout = () => {
+        logout();
+        navigate("/connexion");
+    };
 
     const menuItems = {
         client: [
@@ -144,7 +150,7 @@ const Sidebar = ({ role, isMobileOpen = false, onMobileClose = () => {} }) => {
             {/* Logout */}
             <div className="pt-8 border-t border-white/10 relative z-10">
                 <button
-                    onClick={logout}
+                    onClick={handleLogout}
                     className="flex items-center gap-4 w-full p-5 rounded-[2rem] text-white/30 hover:bg-red-500 hover:text-white hover:shadow-xl hover:shadow-red-500/20 transition-all duration-500 font-black uppercase tracking-[0.2em] text-[10px]"
                 >
                     <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-white/10">
