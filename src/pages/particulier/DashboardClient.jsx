@@ -5,15 +5,15 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useLocation, Navigate } from 'react-router-dom';
-import Sidebar from '../../components/dashboard/Sidebar';
+import Sidebar from '../../components/dashboard/Sidebar_Modern';
 import Topbar from '../../components/dashboard/Topbar';
 import HeroBanner from '../../components/dashboard/HeroBanner';
 import StatCard from '../../components/dashboard/StatCard';
 import ReservationsList from '../../components/dashboard/ReservationsList';
 import ArtisanRecommended from '../../components/dashboard/ArtisanRecommended';
-import MissionsView from './MissionsView';
-import MessagesView from './MessagesView';
-import ProfilView from './ProfilView';
+import MissionsView from './MissionsView_Modern';
+import MessagesView from './MessagesView_Modern';
+import ProfilView from './ProfilView_Modern';
 
 const ClientDashboard = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);

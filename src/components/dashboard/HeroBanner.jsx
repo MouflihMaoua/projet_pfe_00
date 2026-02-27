@@ -44,7 +44,7 @@ const HeroBanner = () => (
                     className="flex flex-wrap gap-4"
                 >
                     <Link
-                        to="/recherche"
+                        to="/recherche-artisan"
                         className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#F97316] text-white font-bold text-sm uppercase tracking-wider hover:bg-[#EA6C0A] transition-colors"
                     >
                         Trouver un artisan

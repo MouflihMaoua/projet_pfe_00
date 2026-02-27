@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, Navigate, Routes, Route, useLocation } from 'react-router-dom';
 // Navbar removed for dashboard (sidebar is primary navigation)
-import Sidebar from '../../components/common/Sidebar';
+import Sidebar from '../../components/dashboard/Sidebar_Modern';
 import ToastContainer from '../../components/layout/ToastContainer';
-import ProfilPage from './ProfilPage';
+import ProfilPage from '../particulier/ProfilView_Modern';
 import {
   Search, Calendar, MessageSquare, ChevronRight, Star, Wrench,
   CheckCircle2, Clock, ArrowUpRight, MapPin, Sparkles, TrendingUp,

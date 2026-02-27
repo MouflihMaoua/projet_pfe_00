@@ -9,12 +9,15 @@ import './i18n/config';
 // ── Pages publiques ───────────────────────────────────────
 const Home          = lazy(() => import('./pages/public/Home'));
 const Search        = lazy(() => import('./pages/public/Search'));
+const SearchArtisan = lazy(() => import('./pages/public/SearchArtisan'));
 const ArtisanProfile = lazy(() => import('./pages/public/ArtisanProfile'));
+const ReputationPublic = lazy(() => import('./components/artisan/ReputationArtisanPublic'));
+const ProfilArtisanPublic = lazy(() => import('./components/artisan/ProfilArtisanPublic'));
 const Login         = lazy(() => import('./pages/public/Login'));
 const Register      = lazy(() => import('./pages/public/Register'));
 
 // ── Dashboards ────────────────────────────────────────────
-const ClientDashboard  = lazy(() => import('./pages/client/Dashboard'));
+const ClientDashboard  = lazy(() => import('./pages/client/Dashboard_Modern'));
 const ArtisanDashboard = lazy(() => import('./pages/artisan/Dashboard'));
 const AdminDashboard   = lazy(() => import('./pages/admin/Dashboard'));
 
@@ -35,7 +38,10 @@ function App() {
             {/* ── Routes Publiques ────────────────────── */}
             <Route path="/"           element={<MainLayout><Home /></MainLayout>} />
             <Route path="/recherche"  element={<MainLayout><Search /></MainLayout>} />
+            <Route path="/recherche-artisan" element={<MainLayout><SearchArtisan /></MainLayout>} />
             <Route path="/artisan/:id" element={<MainLayout><ArtisanProfile /></MainLayout>} />
+            <Route path="/profil-artisan/:id" element={<MainLayout><ProfilArtisanPublic /></MainLayout>} />
+            <Route path="/reputation-artisan-public" element={<MainLayout><ReputationPublic /></MainLayout>} />
             <Route path="/connexion"  element={<Login />} />
             <Route path="/inscription" element={<Register />} />
 

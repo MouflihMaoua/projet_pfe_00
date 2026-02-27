@@ -18,10 +18,40 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Gérer l'ancrage au chargement de la page
+    useEffect(() => {
+        if (location.hash) {
+            const element = document.querySelector(location.hash);
+            if (element) {
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            }
+        }
+    }, [location]);
+
     const navLinks = [
-        { name: 'Trouver un artisan', href: '/recherche' },
+        { name: 'Trouver un artisan', href: '/recherche-artisan' },
         { name: 'Comment ça marche', href: '/#how-it-works' },
     ];
+
+    const handleNavClick = (href) => {
+        console.log('Navigation vers:', href);
+        if (href.startsWith('#')) {
+            // Si on est sur la page d'accueil
+            if (location.pathname === '/') {
+                const element = document.querySelector(href);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            } else {
+                // Si on est sur une autre page, on va à la page d'accueil avec l'ancre
+                window.location.href = '/' + href;
+            }
+        } else {
+            window.location.href = href;
+        }
+    };
 
     const getDashboardLink = () => {
         switch (role) {
@@ -54,16 +84,20 @@ const Navbar = () => {
                     {/* Desktop Nav */}
                     <div className="hidden md:flex items-center space-x-10">
                         {navLinks.map((link) => (
-                            <Link
+                            <a
                                 key={link.name}
-                                to={link.href}
+                                href={link.href}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleNavClick(link.href);
+                                }}
                                 className={cn(
-                                    "font-bold text-sm uppercase tracking-widest transition-all hover:text-brand-orange",
+                                    "font-bold text-sm uppercase tracking-widest transition-all hover:text-brand-orange cursor-pointer",
                                     isScrolled || location.pathname !== '/' ? "text-brand-navy/70" : "text-white/80"
                                 )}
                             >
                                 {link.name}
-                            </Link>
+                            </a>
                         ))}
 
                         {isAuthenticated ? (
@@ -128,14 +162,18 @@ const Navbar = () => {
             )}>
                 <div className="px-6 pt-4 pb-10 space-y-2 bg-grain relative">
                     {navLinks.map((link) => (
-                        <Link
+                        <a
                             key={link.name}
-                            to={link.href}
-                            className="block px-4 py-5 text-lg font-bold text-brand-navy hover:bg-brand-orange/5 hover:text-brand-orange rounded-2xl transition-all"
-                            onClick={() => setIsOpen(false)}
+                            href={link.href}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleNavClick(link.href);
+                                setIsOpen(false);
+                            }}
+                            className="block px-4 py-5 text-lg font-bold text-brand-navy hover:bg-brand-orange/5 hover:text-brand-orange rounded-2xl transition-all cursor-pointer"
                         >
                             {link.name}
-                        </Link>
+                        </a>
                     ))}
                     {!isAuthenticated ? (
                         <div className="pt-6 grid grid-cols-1 gap-4">
