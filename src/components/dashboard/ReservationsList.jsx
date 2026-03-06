@@ -55,7 +55,7 @@ const ReservationsList = () => (
         <div className="p-6 border-b border-[#E2E8F0] flex justify-between items-center">
             <h2 className="text-xl font-bold text-[#1C1917]">Dernières Réservations</h2>
             <Link
-                to="/dashboard/client/missions"
+                to="/dashboard/particulier/missions"
                 className="text-[#F97316] text-sm font-semibold hover:text-[#EA6C0A] flex items-center gap-1"
             >
                 Voir tout <ChevronRight size={16} />
@@ -93,7 +93,7 @@ const ReservationsList = () => (
                             {res.status}
                         </span>
                         <Link
-                            to={`/dashboard/client/missions`}
+                            to={`/dashboard/particulier/missions`}
                             className="p-2 rounded-xl text-[#64748B] hover:bg-[#F4F6FA] hover:text-[#F97316] transition-colors"
                         >
                             <ChevronRight size={20} />

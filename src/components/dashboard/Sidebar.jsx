@@ -9,10 +9,10 @@ import { LayoutDashboard, CalendarDays, MessageSquare, UserCircle, LogOut, Wrenc
 import { useAuthStore } from '../../store/useAuthStore';
 
 const menuItems = [
-    { name: "Vue d'ensemble", icon: LayoutDashboard, path: '/dashboard/client' },
-    { name: 'Mes Missions', icon: CalendarDays, path: '/dashboard/client/missions' },
-    { name: 'Discussions', icon: MessageSquare, path: '/dashboard/client/messages' },
-    { name: 'Profil Client', icon: UserCircle, path: '/dashboard/client/profil' },
+    { name: "Vue d'ensemble", icon: LayoutDashboard, path: '/dashboard/particulier' },
+    { name: 'Mes Missions', icon: CalendarDays, path: '/dashboard/particulier/missions' },
+    { name: 'Discussions', icon: MessageSquare, path: '/dashboard/particulier/messages' },
+    { name: 'Profil Client', icon: UserCircle, path: '/dashboard/particulier/profil' },
 ];
 
 const Sidebar = ({ isOpen, onClose, onMenuClick }) => {
@@ -53,11 +53,9 @@ const Sidebar = ({ isOpen, onClose, onMenuClick }) => {
                 {/* Logo */}
                 <div className="p-8 pb-6">
                     <Link to="/" className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-2xl bg-[#F97316] flex items-center justify-center">
-                            <Wrench size={24} className="text-white" />
-                        </div>
+                        <img src="/assets/logo_app.png" alt="7rayfi" className="w-12 h-12 rounded-2xl" />
                         <div>
-                            <p className="text-white font-bold text-lg leading-tight">ArtisanConnect</p>
+                            <p className="text-white font-bold text-lg leading-tight">7rayfi</p>
                             <p className="text-white/40 text-[10px] font-semibold tracking-[0.3em]">DASHBOARD</p>
                         </div>
                     </Link>

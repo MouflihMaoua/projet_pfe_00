@@ -152,7 +152,7 @@ const Footer = () => (
         {/* Bottom bar */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '1.25rem 1.5rem', textAlign: 'center' }}>
             <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.82rem' }}>
-                © {new Date().getFullYear()} ArtisanConnect — Tous droits réservés. Fait avec ❤️ au Maroc.
+                © {new Date().getFullYear()} 7rayfi — Tous droits réservés. Fait avec ❤️ au Maroc.
             </p>
         </div>
     </footer>

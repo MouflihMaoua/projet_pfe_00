@@ -4,17 +4,18 @@ import { SearchIcon, MapPin, SlidersHorizontal, ArrowRight, Ghost } from 'lucide
 import SearchBar from '../../components/common/SearchBar';
 import ArtisanCard from '../../components/artisan/ArtisanCard';
 import EmptyState from '../../components/ui/EmptyState';
+import { SERVICES_ARTISAN } from '../../constants/services';
 
 const artisansData = [
     { id: 1, name: 'Ahmed Mansouri', job: 'Plombier', city: 'Casablanca', rating: 4.8, reviews: 156, price: 'À partir de 150 DH', image: 'https://images.unsplash.com/photo-1540324155974-7523202daa3f?w=400', verified: true },
     { id: 2, name: 'Youssef Alami', job: 'Électricien', city: 'Rabat', rating: 4.9, reviews: 89, price: 'À partir de 200 DH', image: 'https://images.unsplash.com/photo-1558222218-b7b54eede3f3?w=400', verified: true },
-    { id: 3, name: 'Amine Bennani', job: 'Menuisier', city: 'Casablanca', rating: 4.7, reviews: 67, price: 'À partir de 250 DH', image: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=400', verified: false },
+    { id: 3, name: 'Amine Bennani', job: 'Femme de ménage', city: 'Casablanca', rating: 4.7, reviews: 67, price: 'À partir de 250 DH', image: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=400', verified: false },
     { id: 4, name: 'Sarah Tahiri', job: 'Peintre', city: 'Marrakech', rating: 4.6, reviews: 45, price: 'À partir de 100 DH', image: 'https://images.unsplash.com/photo-1589710751893-f9a6770ad71b?w=400', verified: true },
-    { id: 5, name: 'Omar Idrissi', job: 'Maçon', city: 'Tanger', rating: 4.5, reviews: 34, price: 'Sur devis', image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400', verified: false },
+    { id: 5, name: 'Omar Idrissi', job: 'Technicien en électroménager et climatisation', city: 'Tanger', rating: 4.5, reviews: 34, price: 'Sur devis', image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400', verified: false },
     { id: 6, name: 'Hassan Zemmouri', job: 'Plombier', city: 'Fès', rating: 4.8, reviews: 112, price: 'À partir de 180 DH', image: 'https://images.unsplash.com/photo-1595841055318-62400b65f242?w=400', verified: true },
 ];
 
-const categories = ['Tous', 'Plomberie', 'Électricité', 'Menuiserie', 'Peinture', 'Maçonnerie', 'Climatisation'];
+const categories = ['Tous', ...SERVICES_ARTISAN];
 
 const Search = () => {
     const [filters, setFilters] = useState({ term: '', city: '' });

@@ -7,7 +7,7 @@ export const useAuthStore = create(
             user: null,
             token: null,
             isAuthenticated: false,
-            role: null, // 'client', 'artisan', 'admin'
+            role: null, // 'particulier', 'artisan', 'admin'
 
             setAuth: (user, token) => set({
                 user,

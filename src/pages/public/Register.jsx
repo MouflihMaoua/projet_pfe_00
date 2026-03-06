@@ -2,39 +2,13 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Briefcase, Mail, Lock, UserPlus, ArrowRight, ArrowLeft, CheckCircle2, Upload, Camera, MapPin, Phone, Wrench } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import toast from 'react-hot-toast';
+import logoApp from '/assets/logo_app.png';
 
 const VILLES = ['Casablanca', 'Rabat', 'Marrakech', 'Fès', 'Tanger', 'Agadir', 'Meknès', 'Oujda', 'Kénitra', 'Tétouan'];
 const MÉTIERS = ['Plombier', 'Peintre', 'Électricienne', 'Femme de ménage', 'Technicien Climatisation Certifié'];
 const DISTANCES = ['<10km', '20km', '30km', '>30km'];
 const SEXES = ['Homme', 'Femme'];
-
-const registerSchema = z.object({
-    nom: z.string().min(2, 'Nom requis'),
-    prenom: z.string().min(2, 'Prénom requis'),
-    email: z.string().email('Email invalide'),
-    telephone: z.string().min(10, 'Téléphone requis'),
-    sexe: z.string().min(1, 'Sexe requis'),
-    ville: z.string().min(1, 'Ville requise'),
-    codePostal: z.string().min(4, 'Code postal requis'),
-    description: z.string().min(10, 'Description requise (min 10 caractères)'),
-    password: z.string().min(6, 'Le mot de passe doit faire au moins 6 caractères'),
-    confirmPassword: z.string()
-}).refine((data) => data.password === data.confirmPassword, {
-    message: "Les mots de passe ne correspondent pas",
-    path: ["confirmPassword"],
-});
-
-const artisanSchema = registerSchema.extend({
-    metier: z.string().min(1, 'Métier requis'),
-    distance: z.string().min(1, 'Distance requise'),
-    photoProfil: z.any().optional(),
-    aExperience: z.boolean().optional(),
-    anneesExperience: z.number().optional()
-});
 
 const Register = () => {
     const [step, setStep] = useState(1);
@@ -43,20 +17,306 @@ const Register = () => {
     const [aExperience, setAExperience] = useState(false);
     const navigate = useNavigate();
 
-    const schema = role === 'artisan' ? artisanSchema : registerSchema;
-    
-    const { register, handleSubmit, formState: { errors, isSubmitting }, setValue, watch } = useForm({
-        resolver: zodResolver(schema),
+    // États pour gérer les valeurs du formulaire et les erreurs
+    const [formData, setFormData] = useState({
+        nom: '',
+        prenom: '',
+        email: '',
+        telephone: '',
+        password: '',
+        confirmPassword: '',
+        sexe: '',
+        ville: '',
+        codePostal: '',
+        description: '',
+        metier: '',
+        distance: '',
+        aExperience: false,
+        anneesExperience: ''
     });
 
-    const onSubmit = async (data) => {
+    const [errors, setErrors] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Fonctions de validation pour chaque champ
+    const validateField = (name, value) => {
+        const error = {};
+
+        switch (name) {
+            case 'nom':
+                if (!value || value.trim().length < 2) {
+                    error.nom = 'Le nom doit contenir au moins 2 caractères';
+                } else if (/\d/.test(value)) {
+                    error.nom = 'Le nom ne doit pas contenir de chiffres';
+                } else if (!/^[a-zA-ZÀ-ÿ\s'-]+$/.test(value)) {
+                    error.nom = 'Le nom contient des caractères invalides';
+                }
+                break;
+
+            case 'prenom':
+                if (!value || value.trim().length < 2) {
+                    error.prenom = 'Le prénom doit contenir au moins 2 caractères';
+                } else if (/\d/.test(value)) {
+                    error.prenom = 'Le prénom ne doit pas contenir de chiffres';
+                } else if (!/^[a-zA-ZÀ-ÿ\s'-]+$/.test(value)) {
+                    error.prenom = 'Le prénom contient des caractères invalides';
+                }
+                break;
+
+            case 'email':
+                if (!value || value.trim().length === 0) {
+                    error.email = 'L\'email est requis';
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    error.email = 'L\'email n\'est pas valide';
+                }
+                break;
+
+            case 'telephone':
+                if (!value || value.trim().length === 0) {
+                    error.telephone = 'Le téléphone est requis';
+                } else {
+                    const cleanPhone = value.replace(/[\s.-]/g, '');
+                    if (!/^(?:(?:\+|00)33|0)[1-9](?:[\s.-]?\d{2}){4}$|^(?:(?:\+|00)212|0)[5-9](?:[\s.-]?\d{2}){4}$/.test(cleanPhone)) {
+                        error.telephone = 'Le numéro de téléphone n\'est pas valide (format FR/MA)';
+                    }
+                }
+                break;
+
+            case 'password':
+                if (!value || value.trim().length === 0) {
+                    error.password = 'Le mot de passe est requis';
+                } else if (value.length < 8) {
+                    error.password = 'Le mot de passe doit contenir au moins 8 caractères';
+                } else if (!/[A-Z]/.test(value)) {
+                    error.password = 'Le mot de passe doit contenir au moins une majuscule';
+                } else if (!/[a-z]/.test(value)) {
+                    error.password = 'Le mot de passe doit contenir au moins une minuscule';
+                } else if (!/\d/.test(value)) {
+                    error.password = 'Le mot de passe doit contenir au moins un chiffre';
+                } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
+                    error.password = 'Le mot de passe doit contenir au moins un caractère spécial';
+                }
+                break;
+
+            case 'confirmPassword':
+                if (!value || value.trim().length === 0) {
+                    error.confirmPassword = 'La confirmation du mot de passe est requise';
+                } else if (value !== formData.password) {
+                    error.confirmPassword = 'Les mots de passe ne correspondent pas';
+                }
+                break;
+
+            case 'sexe':
+                if (!value) {
+                    error.sexe = 'Sexe requis';
+                }
+                break;
+
+            case 'ville':
+                if (!value || value.trim().length === 0) {
+                    error.ville = 'Ville requise';
+                }
+                break;
+
+            case 'codePostal':
+                if (!value || value.trim().length < 4) {
+                    error.codePostal = 'Code postal requis (min 4 caractères)';
+                } else if (!/^\d+$/.test(value)) {
+                    error.codePostal = 'Le code postal ne doit contenir que des chiffres';
+                }
+                break;
+
+            case 'description':
+                if (!value || value.trim().length < 10) {
+                    error.description = 'Description requise (min 10 caractères)';
+                }
+                break;
+
+            case 'metier':
+                if (role === 'artisan' && (!value || value.trim().length === 0)) {
+                    error.metier = 'Métier requis';
+                }
+                break;
+
+            case 'distance':
+                if (role === 'artisan' && (!value || value.trim().length === 0)) {
+                    error.distance = 'Distance requise';
+                }
+                break;
+
+            case 'anneesExperience':
+                if (aExperience && (!value || value < 0 || value > 50)) {
+                    error.anneesExperience = 'Veuillez entrer un nombre d\'années valide (0-50)';
+                }
+                break;
+
+            default:
+                break;
+        }
+
+        return error;
+    };
+
+    // Validation de tout le formulaire
+    const validateForm = () => {
+        const newErrors = {};
+
+        // Valider chaque champ
+        Object.keys(formData).forEach(field => {
+            const fieldError = validateField(field, formData[field]);
+            if (Object.keys(fieldError).length > 0) {
+                Object.assign(newErrors, fieldError);
+            }
+        });
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    // Gestionnaire de changement pour les inputs
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        
+        // Gérer les checkboxes et radios
+        const fieldValue = type === 'checkbox' || type === 'radio' ? checked : value;
+        
+        // Mettre à jour les données du formulaire
+        setFormData(prev => ({
+            ...prev,
+            [name]: fieldValue
+        }));
+
+        // Valider le champ en temps réel
+        const fieldError = validateField(name, fieldValue);
+        setErrors(prev => {
+            const newErrors = { ...prev };
+            if (Object.keys(fieldError).length > 0) {
+                newErrors[name] = fieldError[name];
+            } else {
+                delete newErrors[name];
+            }
+            return newErrors;
+        });
+    };
+
+    // Gestionnaire de soumission
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        
+        // Valider le formulaire
+        const isValid = validateForm();
+        
+        if (!isValid) {
+            return;
+        }
+
+        // Si le formulaire est valide, procéder à la soumission
+        setIsSubmitting(true);
+        
         try {
             await new Promise(resolve => setTimeout(resolve, 1500));
             toast.success('Compte créé avec succès !');
             navigate('/connexion');
         } catch (error) {
             toast.error("Erreur lors de l'inscription");
+        } finally {
+            setIsSubmitting(false);
         }
+    };
+
+    // Fonction pour vérifier si un champ a une erreur
+    const hasError = (fieldName) => {
+        return errors[fieldName] && errors[fieldName].length > 0;
+    };
+
+    // Fonction pour obtenir la classe CSS en fonction de l'erreur
+    const getFieldClassName = (fieldName) => {
+        if (hasError(fieldName)) {
+            return 'border-red-500';
+        }
+        return 'border-transparent focus:border-brand-orange';
+    };
+
+    // Fonction pour valider l'étape 2 avant de passer à l'étape 3
+    const validateStep2 = () => {
+        const requiredFields = ['nom', 'prenom', 'email', 'telephone', 'sexe', 'description'];
+        
+        // Champs supplémentaires pour les artisans
+        if (role === 'artisan') {
+            requiredFields.push('metier');
+        }
+
+        // Vérifier si tous les champs requis sont remplis
+        const missingFields = requiredFields.filter(field => {
+            const value = formData[field];
+            return !value || (typeof value === 'string' && value.trim() === '');
+        });
+
+        if (missingFields.length > 0) {
+            // Afficher un message d'erreur
+            const fieldNames = {
+                nom: 'Nom',
+                prenom: 'Prénom', 
+                email: 'Email',
+                telephone: 'Téléphone',
+                sexe: 'Sexe',
+                description: 'Description',
+                metier: 'Métier'
+            };
+
+            const missingFieldNames = missingFields.map(field => fieldNames[field] || field);
+            toast.error(`Veuillez remplir les champs obligatoires: ${missingFieldNames.join(', ')}`);
+            
+            // Mettre le focus sur le premier champ manquant
+            const firstMissingField = document.querySelector(`[name="${missingFields[0]}"]`);
+            if (firstMissingField) {
+                firstMissingField.focus();
+                firstMissingField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            return false;
+        }
+
+        return true;
+    };
+
+    // Fonction pour valider l'étape 3 avant de passer à l'étape 4
+    const validateStep3 = () => {
+        const requiredFields = ['ville', 'codePostal'];
+        
+        // Champs supplémentaires pour les artisans
+        if (role === 'artisan') {
+            requiredFields.push('distance');
+        }
+
+        // Vérifier si tous les champs requis sont remplis
+        const missingFields = requiredFields.filter(field => {
+            const value = formData[field];
+            return !value || (typeof value === 'string' && value.trim() === '');
+        });
+
+        if (missingFields.length > 0) {
+            // Afficher un message d'erreur
+            const fieldNames = {
+                ville: 'Ville',
+                codePostal: 'Code postal',
+                distance: 'Distance de déplacement'
+            };
+
+            const missingFieldNames = missingFields.map(field => fieldNames[field] || field);
+            toast.error(`Veuillez remplir les champs obligatoires: ${missingFieldNames.join(', ')}`);
+            
+            // Mettre le focus sur le premier champ manquant
+            const firstMissingField = document.querySelector(`[name="${missingFields[0]}"]`);
+            if (firstMissingField) {
+                firstMissingField.focus();
+                firstMissingField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            return false;
+        }
+
+        return true;
     };
 
     return (
@@ -86,10 +346,8 @@ const Register = () => {
 
                     <div className="mt-40">
                         <Link to="/" className="flex items-center space-x-2">
-                            <div className="w-8 h-8 bg-brand-orange rounded-lg flex items-center justify-center">
-                                <span className="text-white font-bold">A</span>
-                            </div>
-                            <span className="font-bold text-xl">ArtisanConnect</span>
+                            <img src={logoApp} alt="7rayfi" className="w-16 h-16 object-contain" />
+                            <span className="font-bold text-xl">7rayfi</span>
                         </Link>
                     </div>
                 </div>
@@ -158,60 +416,121 @@ const Register = () => {
                                     </p>
                                 </div>
 
-                                <div className="space-y-6">
+                                <form onSubmit={handleSubmit} className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                         <div className="space-y-2">
                                             <label className="text-sm font-bold text-brand-dark ml-1">Nom</label>
                                             <input
-                                                {...register('nom')}
-                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${errors.nom ? 'border-red-500' : 'border-transparent focus:border-brand-orange focus:bg-white'} outline-none transition-all shadow-sm`}
+                                                name="nom"
+                                                value={formData.nom}
+                                                onChange={handleChange}
+                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${getFieldClassName('nom')} focus:bg-white outline-none transition-all shadow-sm`}
                                                 placeholder="Alami"
                                             />
-                                            {errors.nom && <p className="text-xs text-red-500 ml-1">{errors.nom.message}</p>}
+                                            {hasError('nom') && <p className="text-xs text-red-500 ml-1">{errors.nom}</p>}
+                                            {!hasError('nom') && formData.nom && (
+                                                <p className="text-xs text-green-600 ml-1">✓ Nom valide</p>
+                                            )}
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-sm font-bold text-brand-dark ml-1">Prénom</label>
                                             <input
-                                                {...register('prenom')}
-                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${errors.prenom ? 'border-red-500' : 'border-transparent focus:border-brand-orange focus:bg-white'} outline-none transition-all shadow-sm`}
+                                                name="prenom"
+                                                value={formData.prenom}
+                                                onChange={handleChange}
+                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${getFieldClassName('prenom')} focus:bg-white outline-none transition-all shadow-sm`}
                                                 placeholder="Mohammed"
                                             />
-                                            {errors.prenom && <p className="text-xs text-red-500 ml-1">{errors.prenom.message}</p>}
+                                            {hasError('prenom') && <p className="text-xs text-red-500 ml-1">{errors.prenom}</p>}
+                                            {!hasError('prenom') && formData.prenom && (
+                                                <p className="text-xs text-green-600 ml-1">✓ Prénom valide</p>
+                                            )}
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                         <div className="space-y-2">
                                             <label className="text-sm font-bold text-brand-dark ml-1">Email</label>
                                             <input
-                                                {...register('email')}
-                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${errors.email ? 'border-red-500' : 'border-transparent focus:border-brand-orange focus:bg-white'} outline-none transition-all shadow-sm`}
+                                                name="email"
+                                                type="email"
+                                                value={formData.email}
+                                                onChange={handleChange}
+                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${getFieldClassName('email')} focus:bg-white outline-none transition-all shadow-sm`}
                                                 placeholder="mohammed@example.com"
                                             />
-                                            {errors.email && <p className="text-xs text-red-500 ml-1">{errors.email.message}</p>}
+                                            {hasError('email') && <p className="text-xs text-red-500 ml-1">{errors.email}</p>}
+                                            {!hasError('email') && formData.email && (
+                                                <p className="text-xs text-green-600 ml-1">✓ Email valide</p>
+                                            )}
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-sm font-bold text-brand-dark ml-1">Téléphone</label>
                                             <input
-                                                {...register('telephone')}
-                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${errors.telephone ? 'border-red-500' : 'border-transparent focus:border-brand-orange focus:bg-white'} outline-none transition-all shadow-sm`}
-                                                placeholder="06XXXXXXXX"
+                                                name="telephone"
+                                                type="tel"
+                                                value={formData.telephone}
+                                                onChange={handleChange}
+                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${getFieldClassName('telephone')} focus:bg-white outline-none transition-all shadow-sm`}
+                                                placeholder="06 12 34 56 78"
                                             />
-                                            {errors.telephone && <p className="text-xs text-red-500 ml-1">{errors.telephone.message}</p>}
+                                            {hasError('telephone') && <p className="text-xs text-red-500 ml-1">{errors.telephone}</p>}
+                                            {!hasError('telephone') && formData.telephone && (
+                                                <p className="text-xs text-green-600 ml-1">✓ Téléphone valide</p>
+                                            )}
                                         </div>
+                                    </div>
+                                    
+                                    {/* Champ mot de passe avec indicateur de force */}
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-bold text-brand-dark ml-1">Mot de passe</label>
+                                        <input
+                                            name="password"
+                                            type="password"
+                                            value={formData.password}
+                                            onChange={handleChange}
+                                            className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${getFieldClassName('password')} focus:bg-white outline-none transition-all shadow-sm`}
+                                            placeholder="••••••••"
+                                        />
+                                        {hasError('password') && <p className="text-xs text-red-500 ml-1">{errors.password}</p>}
+                                        {!hasError('password') && formData.password && (
+                                            <div className="text-xs text-green-600 ml-1 space-y-1">
+                                                <p>✓ Mot de passe valide</p>
+                                                <div className="text-xs text-gray-500 ml-4">
+                                                    Doit contenir: 8+ caractères, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-bold text-brand-dark ml-1">Confirmer le mot de passe</label>
+                                        <input
+                                            name="confirmPassword"
+                                            type="password"
+                                            value={formData.confirmPassword}
+                                            onChange={handleChange}
+                                            className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${getFieldClassName('confirmPassword')} focus:bg-white outline-none transition-all shadow-sm`}
+                                            placeholder="••••••••"
+                                        />
+                                        {hasError('confirmPassword') && <p className="text-xs text-red-500 ml-1">{errors.confirmPassword}</p>}
+                                        {!hasError('confirmPassword') && formData.confirmPassword && (
+                                            <p className="text-xs text-green-600 ml-1">✓ Les mots de passe correspondent</p>
+                                        )}
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                         <div className="space-y-2">
                                             <label className="text-sm font-bold text-brand-dark ml-1">Sexe</label>
                                             <select
-                                                {...register('sexe')}
-                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${errors.sexe ? 'border-red-500' : 'border-transparent focus:border-brand-orange focus:bg-white'} outline-none transition-all shadow-sm`}
+                                                name="sexe"
+                                                value={formData.sexe}
+                                                onChange={handleChange}
+                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${getFieldClassName('sexe')} focus:bg-white outline-none transition-all shadow-sm`}
                                             >
                                                 <option value="">Sélectionner</option>
                                                 {SEXES.map(sexe => (
                                                     <option key={sexe} value={sexe}>{sexe}</option>
                                                 ))}
                                             </select>
-                                            {errors.sexe && <p className="text-xs text-red-500 ml-1">{errors.sexe.message}</p>}
+                                            {hasError('sexe') && <p className="text-xs text-red-500 ml-1">{errors.sexe}</p>}
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-sm font-bold text-brand-dark ml-1">Photo de profil</label>
@@ -221,7 +540,7 @@ const Register = () => {
                                                     accept="image/*"
                                                     onChange={(e) => {
                                                         setPhotoFile(e.target.files[0]);
-                                                        setValue('photoProfil', e.target.files[0]);
+                                                        handleChange(e);
                                                     }}
                                                     className="w-full px-5 py-4 bg-gray-50 rounded-2xl border border-transparent focus:border-brand-orange focus:bg-white outline-none transition-all shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand-orange file:text-white hover:file:bg-brand-orange/90"
                                                 />
@@ -235,12 +554,14 @@ const Register = () => {
                                     <div className="space-y-2">
                                         <label className="text-sm font-bold text-brand-dark ml-1">Description du profil</label>
                                         <textarea
-                                            {...register('description')}
+                                            name="description"
+                                            value={formData.description}
+                                            onChange={handleChange}
                                             rows={3}
-                                            className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${errors.description ? 'border-red-500' : 'border-transparent focus:border-brand-orange focus:bg-white'} outline-none transition-all shadow-sm resize-none`}
+                                            className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${getFieldClassName('description')} focus:bg-white outline-none transition-all shadow-sm resize-none`}
                                             placeholder="Décrivez brièvement votre profil et vos compétences..."
                                         />
-                                        {errors.description && <p className="text-xs text-red-500 ml-1">{errors.description.message}</p>}
+                                        {hasError('description') && <p className="text-xs text-red-500 ml-1">{errors.description}</p>}
                                     </div>
 
                                     {role === 'artisan' && (
@@ -249,15 +570,17 @@ const Register = () => {
                                             <div className="space-y-2">
                                                 <label className="text-sm font-bold text-brand-dark ml-1">Métier</label>
                                                 <select
-                                                    {...register('metier')}
-                                                    className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${errors.metier ? 'border-red-500' : 'border-transparent focus:border-brand-orange focus:bg-white'} outline-none transition-all shadow-sm`}
+                                                    name="metier"
+                                                    value={formData.metier}
+                                                    onChange={handleChange}
+                                                    className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${getFieldClassName('metier')} focus:bg-white outline-none transition-all shadow-sm`}
                                                 >
                                                     <option value="">Sélectionner un métier</option>
                                                     {MÉTIERS.map(metier => (
                                                         <option key={metier} value={metier}>{metier}</option>
                                                     ))}
                                                 </select>
-                                                {errors.metier && <p className="text-xs text-red-500 ml-1">{errors.metier.message}</p>}
+                                                {hasError('metier') && <p className="text-xs text-red-500 ml-1">{errors.metier}</p>}
                                             </div>
                                             
                                             <div className="space-y-2">
@@ -266,12 +589,18 @@ const Register = () => {
                                                     <label className="flex items-center space-x-2 cursor-pointer">
                                                         <input
                                                             type="radio"
-                                                            name="experience"
-                                                            value="oui"
+                                                            name="aExperience"
+                                                            value="true"
                                                             checked={aExperience}
                                                             onChange={(e) => {
                                                                 setAExperience(true);
-                                                                setValue('aExperience', true);
+                                                                handleChange({
+                                                                    target: {
+                                                                        name: 'aExperience',
+                                                                        type: 'radio',
+                                                                        checked: true
+                                                                    }
+                                                                });
                                                             }}
                                                             className="w-4 h-4 text-brand-orange border-gray-300 focus:ring-brand-orange"
                                                         />
@@ -280,13 +609,24 @@ const Register = () => {
                                                     <label className="flex items-center space-x-2 cursor-pointer">
                                                         <input
                                                             type="radio"
-                                                            name="experience"
-                                                            value="non"
+                                                            name="aExperience"
+                                                            value="false"
                                                             checked={!aExperience}
                                                             onChange={(e) => {
                                                                 setAExperience(false);
-                                                                setValue('aExperience', false);
-                                                                setValue('anneesExperience', 0);
+                                                                handleChange({
+                                                                    target: {
+                                                                        name: 'aExperience',
+                                                                        type: 'radio',
+                                                                        checked: false
+                                                                    }
+                                                                });
+                                                                handleChange({
+                                                                    target: {
+                                                                        name: 'anneesExperience',
+                                                                        value: ''
+                                                                    }
+                                                                });
                                                             }}
                                                             className="w-4 h-4 text-brand-orange border-gray-300 focus:ring-brand-orange"
                                                         />
@@ -299,28 +639,34 @@ const Register = () => {
                                                 <div className="space-y-2">
                                                     <label className="text-sm font-bold text-brand-dark ml-1">Nombre d'années d'expérience</label>
                                                     <input
+                                                        name="anneesExperience"
                                                         type="number"
-                                                        {...register('anneesExperience', { valueAsNumber: true })}
+                                                        value={formData.anneesExperience}
+                                                        onChange={handleChange}
                                                         min="0"
                                                         max="50"
-                                                        className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${errors.anneesExperience ? 'border-red-500' : 'border-transparent focus:border-brand-orange focus:bg-white'} outline-none transition-all shadow-sm`}
+                                                        className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${getFieldClassName('anneesExperience')} focus:bg-white outline-none transition-all shadow-sm`}
                                                         placeholder="Entrez le nombre d'années..."
                                                     />
-                                                    {errors.anneesExperience && <p className="text-xs text-red-500 ml-1">{errors.anneesExperience.message}</p>}
+                                                    {hasError('anneesExperience') && <p className="text-xs text-red-500 ml-1">{errors.anneesExperience}</p>}
                                                 </div>
                                             )}
                                         </div>
                                     )}
-                                </div>
 
                                 <button
                                     type="button"
-                                    onClick={() => setStep(3)}
+                                    onClick={() => {
+                                        if (validateStep2()) {
+                                            setStep(3);
+                                        }
+                                    }}
                                     className="w-full bg-brand-orange text-white py-5 rounded-2xl font-bold shadow-xl shadow-brand-orange/20 hover:bg-brand-orange/90 transition-all flex items-center justify-center group"
                                 >
                                     Continuer vers la disponibilité
                                     <ArrowRight size={20} className="ml-2 group-hover:scale-110 transition-transform" />
                                 </button>
+                                </form>
                             </motion.div>
                         )}
 
@@ -351,46 +697,56 @@ const Register = () => {
                                         <div className="space-y-2">
                                             <label className="text-sm font-bold text-brand-dark ml-1">Ville</label>
                                             <select
-                                                {...register('ville')}
-                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${errors.ville ? 'border-red-500' : 'border-transparent focus:border-brand-orange focus:bg-white'} outline-none transition-all shadow-sm`}
+                                                name="ville"
+                                                value={formData.ville}
+                                                onChange={handleChange}
+                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${getFieldClassName('ville')} focus:bg-white outline-none transition-all shadow-sm`}
                                             >
                                                 <option value="">Sélectionner une ville</option>
                                                 {VILLES.map(ville => (
                                                     <option key={ville} value={ville}>{ville}</option>
                                                 ))}
                                             </select>
-                                            {errors.ville && <p className="text-xs text-red-500 ml-1">{errors.ville.message}</p>}
+                                            {hasError('ville') && <p className="text-xs text-red-500 ml-1">{errors.ville}</p>}
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-sm font-bold text-brand-dark ml-1">Code postal</label>
                                             <input
-                                                {...register('codePostal')}
-                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${errors.codePostal ? 'border-red-500' : 'border-transparent focus:border-brand-orange focus:bg-white'} outline-none transition-all shadow-sm`}
+                                                name="codePostal"
+                                                value={formData.codePostal}
+                                                onChange={handleChange}
+                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${getFieldClassName('codePostal')} focus:bg-white outline-none transition-all shadow-sm`}
                                                 placeholder="Ex: 20000"
                                             />
-                                            {errors.codePostal && <p className="text-xs text-red-500 ml-1">{errors.codePostal.message}</p>}
+                                            {hasError('codePostal') && <p className="text-xs text-red-500 ml-1">{errors.codePostal}</p>}
                                         </div>
                                     </div>
                                     {role === 'artisan' && (
                                         <div className="space-y-2">
                                             <label className="text-sm font-bold text-brand-dark ml-1">Distance de déplacement</label>
                                             <select
-                                                {...register('distance')}
-                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${errors.distance ? 'border-red-500' : 'border-transparent focus:border-brand-orange focus:bg-white'} outline-none transition-all shadow-sm`}
+                                                name="distance"
+                                                value={formData.distance}
+                                                onChange={handleChange}
+                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${getFieldClassName('distance')} focus:bg-white outline-none transition-all shadow-sm`}
                                             >
                                                 <option value="">Sélectionner une distance</option>
                                                 {DISTANCES.map(distance => (
                                                     <option key={distance} value={distance}>{distance}</option>
                                                 ))}
                                             </select>
-                                            {errors.distance && <p className="text-xs text-red-500 ml-1">{errors.distance.message}</p>}
+                                            {hasError('distance') && <p className="text-xs text-red-500 ml-1">{errors.distance}</p>}
                                         </div>
                                     )}
                                 </div>
 
                                 <button
                                     type="button"
-                                    onClick={() => setStep(4)}
+                                    onClick={() => {
+                                        if (validateStep3()) {
+                                            setStep(4);
+                                        }
+                                    }}
                                     className="w-full bg-brand-orange text-white py-5 rounded-2xl font-bold shadow-xl shadow-brand-orange/20 hover:bg-brand-orange/90 transition-all flex items-center justify-center group"
                                 >
                                     Continuer vers la sécurité
@@ -421,27 +777,31 @@ const Register = () => {
                                     </p>
                                 </div>
 
-                                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                                <form onSubmit={handleSubmit} className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                         <div className="space-y-2">
                                             <label className="text-sm font-bold text-brand-dark ml-1">Mot de passe</label>
                                             <input
-                                                {...register('password')}
+                                                name="password"
                                                 type="password"
-                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${errors.password ? 'border-red-500' : 'border-transparent focus:border-brand-orange focus:bg-white'} outline-none transition-all shadow-sm`}
+                                                value={formData.password}
+                                                onChange={handleChange}
+                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${getFieldClassName('password')} focus:bg-white outline-none transition-all shadow-sm`}
                                                 placeholder="••••••••"
                                             />
-                                            {errors.password && <p className="text-xs text-red-500 ml-1">{errors.password.message}</p>}
+                                            {hasError('password') && <p className="text-xs text-red-500 ml-1">{errors.password}</p>}
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-sm font-bold text-brand-dark ml-1">Confirmer mot de passe</label>
                                             <input
-                                                {...register('confirmPassword')}
+                                                name="confirmPassword"
                                                 type="password"
-                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${errors.confirmPassword ? 'border-red-500' : 'border-transparent focus:border-brand-orange focus:bg-white'} outline-none transition-all shadow-sm`}
+                                                value={formData.confirmPassword}
+                                                onChange={handleChange}
+                                                className={`w-full px-5 py-4 bg-gray-50 rounded-2xl border ${getFieldClassName('confirmPassword')} focus:bg-white outline-none transition-all shadow-sm`}
                                                 placeholder="••••••••"
                                             />
-                                            {errors.confirmPassword && <p className="text-xs text-red-500 ml-1">{errors.confirmPassword.message}</p>}
+                                            {hasError('confirmPassword') && <p className="text-xs text-red-500 ml-1">{errors.confirmPassword}</p>}
                                         </div>
                                     </div>
 

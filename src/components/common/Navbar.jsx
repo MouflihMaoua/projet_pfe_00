@@ -57,7 +57,7 @@ const Navbar = () => {
         switch (role) {
             case 'admin': return '/admin';
             case 'artisan': return '/dashboard/artisan';
-            default: return '/dashboard/client';
+            default: return '/dashboard/artisan';
         }
     };
 
@@ -69,16 +69,9 @@ const Navbar = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center">
                     {/* Logo */}
-                    <Link to="/" className="flex items-center gap-3 group">
-                        <div className="w-11 h-11 bg-brand-orange rounded-2xl flex items-center justify-center shadow-lg shadow-brand-orange/30 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                            <span className="text-white font-black text-2xl font-heading">A</span>
-                        </div>
-                        <span className={cn(
-                            "font-bold text-2xl tracking-tighter font-heading transition-colors",
-                            isScrolled || location.pathname !== '/' ? "text-brand-navy" : "text-white"
-                        )}>
-                            Artisan<span className="text-brand-orange">Connect</span>
-                        </span>
+                    <Link to="/" className="flex items-center gap-2">
+                        <img src="/assets/logo_app.png" alt="7rayfi_logo" className="w-16 h-16 object-contain" />
+                        <span className="text-xl font-bold text-gray-900">7rayfi</span>
                     </Link>
 
                     {/* Desktop Nav */}

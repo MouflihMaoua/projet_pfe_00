@@ -1,6 +1,6 @@
 // ============================================================
 // components/layout/Sidebar.jsx
-// Sidebar de navigation principale ArtisanConnect
+// Sidebar de navigation principale 7rayfi
 // Sections étiquetées, indicateur de page active, logo
 // ============================================================
 
@@ -46,11 +46,9 @@ const Sidebar = () => {
     >
       {/* ── Logo ─────────────────────────────────────────────── */}
       <div className="flex items-center gap-2.5 px-6 py-6 border-b border-white/5">
-        <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center">
-          <Wrench size={15} className="text-white" strokeWidth={2.5} />
-        </div>
+        <img src="/assets/logo_app.png" alt="7rayfi" className="w-8 h-8 rounded-lg" />
         <div>
-          <span className="text-white font-bold text-sm tracking-tight">ArtisanConnect</span>
+          <span className="text-white font-bold text-sm tracking-tight">7rayfi</span>
           <p className="text-[10px] text-slate-500 font-medium leading-none mt-0.5">Plateforme client</p>
         </div>
       </div>

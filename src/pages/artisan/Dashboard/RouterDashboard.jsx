@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, Link } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Mail, 
@@ -20,10 +20,8 @@ import ArtisanMessages from '../messages';
 import ArtisanCalendrier from '../calendrier';
 import ArtisanDemandes from '../demandes';
 import ArtisanDevis from '../devis';
-import ArtisanInterventions from '../interventions';
 import ArtisanRevenus from '../revenus';
 import ArtisanProfil from '../profil';
-import ArtisanSettings from '../settings';
 
 const ArtisanDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -36,10 +34,8 @@ const ArtisanDashboard = () => {
     { label: 'Calendrier', icon: Calendar, path: '/dashboard/artisan/calendrier' },
     { label: 'Demandes', icon: FileText, path: '/dashboard/artisan/demandes' },
     { label: 'Devis', icon: FileText, path: '/dashboard/artisan/devis' },
-    { label: 'Interventions', icon: Wrench, path: '/dashboard/artisan/interventions' },
     { label: 'Revenus', icon: TrendingUp, path: '/dashboard/artisan/revenus' },
     { label: 'Profil', icon: User, path: '/dashboard/artisan/profil' },
-    { label: 'Paramètres', icon: Settings, path: '/dashboard/artisan/settings' },
   ];
 
   const isActive = (path) => {
@@ -76,9 +72,9 @@ const ArtisanDashboard = () => {
         {/* Menu Items */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           {menuItems.map((item) => (
-            <a
+            <Link
               key={item.path}
-              href={item.path}
+              to={item.path}
               className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
                 isActive(item.path)
                   ? 'bg-orange-500 text-white'
@@ -87,7 +83,7 @@ const ArtisanDashboard = () => {
             >
               <item.icon size={20} className="flex-shrink-0" />
               <span className={`${!sidebarOpen && 'hidden'} whitespace-nowrap`}>{item.label}</span>
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -130,8 +126,8 @@ const ArtisanDashboard = () => {
               </button>
               {profileMenuOpen && (
                 <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50 min-w-max">
-                  <a href="/dashboard/artisan/profil" className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700">Mon profil</a>
-                  <a href="/dashboard/artisan/settings" className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700">Paramètres</a>
+                  <Link to="/dashboard/artisan/profil" className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700">Mon profil</Link>
+                  <Link to="/dashboard/artisan/settings" className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700">Paramètres</Link>
                   <hr className="my-1" />
                   <button className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-red-600">Déconnexion</button>
                 </div>
@@ -149,10 +145,8 @@ const ArtisanDashboard = () => {
               <Route path="calendrier" element={<ArtisanCalendrier />} />
               <Route path="demandes" element={<ArtisanDemandes />} />
               <Route path="devis" element={<ArtisanDevis />} />
-              <Route path="interventions" element={<ArtisanInterventions />} />
               <Route path="revenus" element={<ArtisanRevenus />} />
               <Route path="profil" element={<ArtisanProfil />} />
-              <Route path="settings" element={<ArtisanSettings />} />
               <Route path="*" element={<Navigate to="" />} />
             </Routes>
           </div>

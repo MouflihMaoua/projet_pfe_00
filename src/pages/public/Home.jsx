@@ -233,7 +233,7 @@ const Home = () => {
                             />
                         </div>
                         <div className="space-y-8">
-                            <h2 className="text-4xl md:text-5xl font-bold text-brand-dark leading-tight">Pourquoi choisir <span className="text-brand-orange">ArtisanConnect</span> ?</h2>
+                            <h2 className="text-4xl md:text-5xl font-bold text-brand-dark leading-tight">Pourquoi choisir <span className="text-brand-orange">7rayfi</span> ?</h2>
                             <div className="space-y-6">
                                 {[
                                     { title: 'Vérification Rigoureuse', desc: 'Chaque artisan passe un entretien et une vérification de ses références.' },

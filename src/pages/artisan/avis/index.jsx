@@ -1,6 +1,7 @@
 // src/pages/artisan/avis/index.jsx
 import { useState } from 'react';
 import { Star, ThumbsUp, Flag, MessageSquare, Filter, Search } from 'lucide-react';
+import { SERVICES_ARTISAN } from '../../../constants/services';
 
 export default function AvisPage() {
   const [filter, setFilter] = useState('tous');
@@ -26,7 +27,7 @@ export default function AvisPage() {
       commentaire: "Excellent travail, très professionnel. Je recommande vivement !",
       date: "2024-01-10",
       reponse: null,
-      service: "Plomberie"
+      service: "Plombier"
     },
     {
       id: 2,
@@ -36,7 +37,7 @@ export default function AvisPage() {
       commentaire: "Bon travail, mais un peu de retard sur le rendez-vous.",
       date: "2024-01-08",
       reponse: "Désolé pour le retard, content que le travail vous plaise.",
-      service: "Électricité"
+      service: "Électricien"
     },
     {
       id: 3,
@@ -46,7 +47,7 @@ export default function AvisPage() {
       commentaire: "Intervention rapide et efficace. Prix correct.",
       date: "2024-01-05",
       reponse: null,
-      service: "Chauffage"
+      service: "Technicien en électroménager et climatisation"
     }
   ];
 
@@ -109,15 +110,17 @@ export default function AvisPage() {
         </div>
         <select className="px-4 py-2 border border-gray-300 rounded-lg">
           <option>Tous les services</option>
-          <option>Plomberie</option>
-          <option>Électricité</option>
-          <option>Chauffage</option>
+          {SERVICES_ARTISAN.map((service, index) => (
+            <option key={index} value={service}>{service}</option>
+          ))}
         </select>
         <select className="px-4 py-2 border border-gray-300 rounded-lg">
           <option>Toutes les notes</option>
           <option>5 étoiles</option>
           <option>4 étoiles</option>
           <option>3 étoiles</option>
+          <option>2 étoiles</option>
+          <option>1 étoile</option>
         </select>
       </div>
 

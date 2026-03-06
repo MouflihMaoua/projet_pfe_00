@@ -1,8 +1,9 @@
 // src/pages/public/SearchArtisan.jsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, MapPin, Filter, Star, Phone, MessageSquare, ChevronRight, X, Clock, CheckCircle, Award, TrendingUp } from 'lucide-react';
+import { Search, MapPin, Filter, Star, Phone, MessageSquare, ChevronRight, X, Clock, CheckCircle, Award, TrendingUp, Send } from 'lucide-react';
 import SearchNavbar from '../../components/public/SearchNavbar';
+import { SERVICES_ARTISAN } from '../../constants/services';
 
 const artisansData = [
   {
@@ -18,7 +19,6 @@ const artisansData = [
     image: 'https://images.unsplash.com/photo-1540324155974-7523202daa3f?w=400',
     verified: true,
     specialites: ['Dépannage', 'Installation', 'Chauffage'],
-    missionsCompletees: 234
   },
   {
     id: 2,
@@ -33,12 +33,11 @@ const artisansData = [
     image: 'https://images.unsplash.com/photo-1558222218-b7b54eede3f3?w=400',
     verified: true,
     specialites: ['Câblage', 'Tableau électrique', 'Éclairage'],
-    missionsCompletees: 178
   },
   {
     id: 3,
     name: 'Amine Bennani',
-    metier: 'Menuisier',
+    metier: 'Peintre',
     ville: 'Casablanca',
     rating: 4.7,
     nbAvis: 67,
@@ -47,8 +46,7 @@ const artisansData = [
     disponibilite: 'Occupé',
     image: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=400',
     verified: false,
-    specialites: ['Meubles sur mesure', 'Agencement', 'Restauration'],
-    missionsCompletees: 145
+    specialites: ['Peinture intérieure', 'Finition', 'Décoration'],
   },
   {
     id: 4,
@@ -63,12 +61,11 @@ const artisansData = [
     image: 'https://images.unsplash.com/photo-1589710751893-f9a6770ad71b?w=400',
     verified: true,
     specialites: ['Peinture intérieure', 'Finition', 'Décoration'],
-    missionsCompletees: 89
   },
   {
     id: 5,
     name: 'Omar Idrissi',
-    metier: 'Maçon',
+    metier: 'Technicien en électroménager et climatisation',
     ville: 'Tanger',
     rating: 4.5,
     nbAvis: 34,
@@ -77,8 +74,7 @@ const artisansData = [
     disponibilite: 'Disponible',
     image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400',
     verified: false,
-    specialites: ['Construction', 'Rénovation', 'Maçonnerie'],
-    missionsCompletees: 67
+    specialites: ['Installation', 'Maintenance', 'Dépannage'],
   },
   {
     id: 6,
@@ -93,7 +89,6 @@ const artisansData = [
     image: 'https://images.unsplash.com/photo-1595841055318-62400b65f242?w=400',
     verified: true,
     specialites: ['Plomberie générale', 'Chauffage', 'Dépannage'],
-    missionsCompletees: 198
   },
   {
     id: 7,
@@ -108,7 +103,6 @@ const artisansData = [
     image: 'https://images.unsplash.com/photo-1580489938304-3c4a6b8c3b3?w=400',
     verified: true,
     specialites: ['Ménage complet', 'Repassage', 'Cuisine'],
-    missionsCompletees: 456
   },
   {
     id: 8,
@@ -123,11 +117,10 @@ const artisansData = [
     image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400',
     verified: true,
     specialites: ['Climatisation', 'Chauffage', 'Ventilation'],
-    missionsCompletees: 123
   }
 ];
 
-const metiers = ['Tous', 'Plombier', 'Électricien', 'Menuisier', 'Peintre', 'Maçon', 'Femme de ménage', 'Technicien Climatisation'];
+const metiers = ['Tous', ...SERVICES_ARTISAN];
 const villes = ['Toutes', 'Casablanca', 'Rabat', 'Marrakech', 'Fès', 'Tanger'];
 const triOptions = ['Pertinence', 'Mieux notés', 'Prix croissant', 'Prix décroissant', 'Plus d\'expérience'];
 
@@ -138,6 +131,8 @@ const SearchArtisan = () => {
   const [tri, setTri] = useState('Pertinence');
   const [showFilters, setShowFilters] = useState(false);
   const [filteredArtisans, setFilteredArtisans] = useState(artisansData);
+  const [showDemandeModal, setShowDemandeModal] = useState(false);
+  const [selectedArtisan, setSelectedArtisan] = useState(null);
 
   useEffect(() => {
     let filtered = artisansData.filter(artisan => {
@@ -170,6 +165,58 @@ const SearchArtisan = () => {
 
     setFilteredArtisans(filtered);
   }, [searchTerm, selectedMetier, selectedVille, tri]);
+
+  const handleOpenDemandeModal = (artisan) => {
+    setSelectedArtisan(artisan);
+    setShowDemandeModal(true);
+  };
+
+  const handleCloseDemandeModal = () => {
+    setShowDemandeModal(false);
+    setSelectedArtisan(null);
+  };
+
+  const handleEnvoyerDemande = (e) => {
+    e.preventDefault();
+    
+    // Récupérer les données du formulaire
+    const formData = new FormData(e.target);
+    const description = formData.get('description');
+    const ville = formData.get('ville');
+    const codePostal = formData.get('codePostal');
+    const urgence = formData.get('urgence');
+
+    // Créer une nouvelle demande
+    const nouvelleDemande = {
+      id: Date.now(),
+      client: "Client Actuel",
+      service: selectedArtisan.metier,
+      description: description,
+      adresse: `${ville} - ${codePostal}`,
+      telephone: "À définir",
+      email: "À définir",
+      date: new Date().toISOString().split('T')[0],
+      heure: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+      urgence: urgence,
+      statut: "nouveau",
+      prix: "À estimer",
+      note: 0,
+      photos: 0,
+      artisanId: selectedArtisan.id,
+      artisanName: selectedArtisan.name,
+      artisanMetier: selectedArtisan.metier,
+      artisanVille: selectedArtisan.ville,
+      artisanImage: selectedArtisan.image
+    };
+
+    // Sauvegarder la demande dans localStorage
+    const demandesExistantes = JSON.parse(localStorage.getItem('demandesArtisans') || '[]');
+    demandesExistantes.push(nouvelleDemande);
+    localStorage.setItem('demandesArtisans', JSON.stringify(demandesExistantes));
+
+    alert(`✅ Demande envoyée avec succès à ${selectedArtisan.name} !\n\nVotre demande a été sauvegardée et sera visible dans votre dashboard.`);
+    handleCloseDemandeModal();
+  };
 
   const ArtisanCard = ({ artisan }) => (
     <motion.div
@@ -256,14 +303,21 @@ const SearchArtisan = () => {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3">
-          <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
-            <Phone size={18} />
+        <div className="flex gap-2">
+          <button className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm">
+            <Phone size={16} />
             <span>Contacter</span>
           </button>
-          <button className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium">
-            <MessageSquare size={18} />
+          <button className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm">
+            <MessageSquare size={16} />
             <span>Message</span>
+          </button>
+          <button 
+            onClick={() => handleOpenDemandeModal(artisan)}
+            className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm"
+          >
+            <Send size={16} />
+            <span>Envoyer demande</span>
           </button>
         </div>
       </div>
@@ -443,6 +497,120 @@ const SearchArtisan = () => {
           </div>
         )}
       </div>
+
+      {/* Modal de demande */}
+      <AnimatePresence>
+        {showDemandeModal && selectedArtisan && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            onClick={handleCloseDemandeModal}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Envoyer une demande</h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Artisan sélectionné : <span className="font-medium text-blue-600">{selectedArtisan.name}</span> - {selectedArtisan.metier}
+                  </p>
+                </div>
+                <button
+                  onClick={handleCloseDemandeModal}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <X size={20} className="text-gray-500" />
+                </button>
+              </div>
+
+              {/* Formulaire de demande */}
+              <form onSubmit={handleEnvoyerDemande} className="space-y-6">
+                {/* Description du problème */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Description du problème</h3>
+                  <textarea
+                    name="description"
+                    placeholder="Décrivez précisément le problème à résoudre..."
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    rows="4"
+                    required
+                  ></textarea>
+                </div>
+
+                {/* Localisation */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Ville
+                    </label>
+                    <input
+                      type="text"
+                      name="ville"
+                      placeholder="Ex: Casablanca"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Code postal
+                    </label>
+                    <input
+                      type="text"
+                      name="codePostal"
+                      placeholder="Ex: 20000"
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Urgence */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Niveau d'urgence
+                  </label>
+                  <select 
+                    name="urgence"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    required
+                  >
+                    <option value="basse">Basse</option>
+                    <option value="moyenne">Moyenne</option>
+                    <option value="haute">Haute</option>
+                  </select>
+                </div>
+
+                {/* Boutons d'action */}
+                <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={handleCloseDemandeModal}
+                    className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+                  >
+                    <Send size={16} />
+                    Envoyer la demande
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

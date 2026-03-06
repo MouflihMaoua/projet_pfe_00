@@ -93,7 +93,7 @@ export default function ArtisanProfile() {
           <div className="ap-hero-inner" style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', gap: 48 }}>
             <div className="ap-badge">
               <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#FF5C1A' }} />
-              Artisan Certifié ArtisanConnect
+              Artisan Certifié 7rayfi
             </div>
 
             <div className="ap-hero-layout" style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 56, alignItems: 'end', width: '100%' }}>

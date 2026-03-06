@@ -1,6 +1,6 @@
 // ============================================================
 // pages/particulier/Profil/index.jsx
-// Page principale "Profil Client" — ArtisanConnect
+// Page principale "Profil Client" — 7rayfi
 // ============================================================
 
 import React, { useState } from "react";

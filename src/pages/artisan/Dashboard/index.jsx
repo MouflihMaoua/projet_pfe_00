@@ -23,9 +23,7 @@ import MessagesPage from '../messages';
 import CalendrierPage from '../calendrier';
 import DemandesPage from '../demandes';
 import DevisPage from '../devis';
-import InterventionsPage from '../interventions';
 import RevenusPage from '../revenus';
-import SettingsPage from '../settings';
 import ReputationArtisanPrivate from '../../../components/artisan/ReputationArtisanPrivate';
 import ProfilPersonnel from '../../../components/artisan/ProfilPersonnel';
 
@@ -41,11 +39,9 @@ const ArtisanDashboard = () => {
     { label: 'Calendrier', icon: Calendar, path: '/dashboard/artisan/calendrier' },
     { label: 'Demandes', icon: FileText, path: '/dashboard/artisan/demandes' },
     { label: 'Devis', icon: FileText, path: '/dashboard/artisan/devis' },
-    { label: 'Interventions', icon: Wrench, path: '/dashboard/artisan/interventions' },
     { label: 'Réputation', icon: Star, path: '/dashboard/artisan/reputation' },
-    { label: 'Profil Personnel', icon: User, path: '/dashboard/artisan/profil-personnel' },
+    { label: 'Profil Personnel', icon: User, path: '/dashboard/artisan/profil' },
     { label: 'Revenus', icon: TrendingUp, path: '/dashboard/artisan/revenus' },
-    { label: 'Paramètres', icon: Settings, path: '/dashboard/artisan/settings' },
   ];
 
   const isActive = (path) => {
@@ -136,8 +132,8 @@ const ArtisanDashboard = () => {
               </button>
               {profileMenuOpen && (
                 <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50 min-w-max">
-                  <a href="/dashboard/artisan/profil" className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700">Mon profil</a>
-                  <a href="/dashboard/artisan/settings" className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700">Paramètres</a>
+                  <Link to="/dashboard/artisan/profil" className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700">Mon profil</Link>
+                  <Link to="/dashboard/artisan/settings" className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700">Paramètres</Link>
                   <hr className="my-1" />
                   <button className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-red-600">Déconnexion</button>
                 </div>
@@ -155,12 +151,10 @@ const ArtisanDashboard = () => {
               <Route path="calendrier" element={<CalendrierPage />} />
               <Route path="demandes" element={<DemandesPage />} />
               <Route path="devis" element={<DevisPage />} />
-              <Route path="interventions" element={<InterventionsPage />} />
               <Route path="reputation" element={<ReputationArtisanPrivate />} />
               <Route path="profil-personnel" element={<ProfilPersonnel userType="artisan" />} />
               <Route path="revenus" element={<RevenusPage />} />
               <Route path="profil" element={<ProfilPage />} />
-              <Route path="settings" element={<SettingsPage />} />
               <Route path="avis" element={<AvisPage />} />
               <Route path="*" element={<Navigate to="" />} />
             </Routes>

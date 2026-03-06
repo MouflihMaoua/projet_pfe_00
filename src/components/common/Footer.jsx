@@ -10,11 +10,9 @@ const Footer = () => {
                     {/* Brand */}
                     <div className="space-y-6">
                         <Link to="/" className="flex items-center space-x-2">
-                            <div className="w-10 h-10 bg-brand-orange rounded-xl flex items-center justify-center">
-                                <span className="text-white font-bold text-xl">A</span>
-                            </div>
+                            <img src="/assets/logo_app.png" alt="7rayfi" className="w-12 h-12" />
                             <span className="font-bold text-2xl tracking-tight">
-                                Artisan<span className="text-brand-orange">Connect</span>
+                                7ray<span className="text-brand-orange">fi</span>
                             </span>
                         </Link>
                         <p className="text-gray-400 leading-relaxed">
@@ -66,14 +64,14 @@ const Footer = () => {
                             </li>
                             <li className="flex items-center space-x-3 text-gray-400">
                                 <Mail size={20} className="text-brand-orange shrink-0" />
-                                <span>contact@artisanconnect.ma</span>
+                                <span>contact@7rayfi.ma</span>
                             </li>
                         </ul>
                     </div>
                 </div>
 
                 <div className="border-t border-white/10 pt-10 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 text-sm text-gray-500">
-                    <p>© 2024 ArtisanConnect. Tous droits réservés.</p>
+                    <p>© 2024 7rayfi. Tous droits réservés.</p>
                     <div className="flex space-x-6">
                         <a href="#" className="hover:text-brand-orange transition-colors">Mentions légales</a>
                         <a href="#" className="hover:text-brand-orange transition-colors">Confidentialité</a>

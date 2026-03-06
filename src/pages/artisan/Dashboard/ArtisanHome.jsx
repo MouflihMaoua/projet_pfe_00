@@ -10,6 +10,7 @@ import {
   DollarSign,
   Briefcase
 } from 'lucide-react';
+import { SERVICES_ARTISAN } from '../../../constants/services';
 
 export default function ArtisanHome() {
   const [isOnline, setIsOnline] = useState(true);
@@ -22,9 +23,9 @@ export default function ArtisanHome() {
   };
 
   const prochainesInterventions = [
-    { id: 1, client: "Jean Dupont", service: "Plomberie", heure: "14:30", adresse: "12 rue de Paris" },
-    { id: 2, client: "Marie Martin", service: "Électricité", heure: "16:00", adresse: "8 av. Victor Hugo" },
-    { id: 3, client: "Pierre Durand", service: "Chauffage", heure: "18:30", adresse: "3 bd Haussmann" }
+    { id: 1, client: "Jean Dupont", service: "Plombier", heure: "14:30", adresse: "12 rue de Paris" },
+    { id: 2, client: "Marie Martin", service: "Électricien", heure: "16:00", adresse: "8 av. Victor Hugo" },
+    { id: 3, client: "Pierre Durand", service: "Technicien en électroménager et climatisation", heure: "18:30", adresse: "3 bd Haussmann" }
   ];
 
   const demandesUrgentes = [
@@ -129,31 +130,7 @@ export default function ArtisanHome() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Colonne gauche - 2/3 */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Prochaines interventions */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Prochaines interventions</h2>
-              <button className="text-sm text-blue-600 hover:text-blue-700 flex items-center">
-                Voir tout <ChevronRight className="h-4 w-4 ml-1" />
-              </button>
-            </div>
-            <div className="space-y-3">
-              {prochainesInterventions.map((intervention) => (
-                <div key={intervention.id} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition">
-                  <div className="flex items-center space-x-3">
-                    <div className="bg-gray-100 p-2 rounded-full">
-                      <Clock className="h-4 w-4 text-gray-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-900">{intervention.client}</p>
-                      <p className="text-sm text-gray-600">{intervention.service} • {intervention.adresse}</p>
-                    </div>
-                  </div>
-                  <span className="text-sm font-medium text-blue-600">{intervention.heure}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          
 
           {/* Graphique revenus */}
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
@@ -182,57 +159,7 @@ export default function ArtisanHome() {
 
         {/* Colonne droite - 1/3 */}
         <div className="space-y-6">
-          {/* Demandes urgentes */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Demandes urgentes</h2>
-              <AlertCircle className="h-5 w-5 text-red-500" />
-            </div>
-            <div className="space-y-3">
-              {demandesUrgentes.map((demande) => (
-                <div key={demande.id} className="p-3 bg-red-50 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <p className="font-medium text-gray-900">{demande.client}</p>
-                    <span className={`text-xs px-2 py-1 rounded-full ${
-                      demande.priorite === 'haute' ? 'bg-red-200 text-red-700' : 'bg-orange-200 text-orange-700'
-                    }`}>
-                      {demande.priorite}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600 mt-1">{demande.temps}</p>
-                  <button className="mt-2 text-sm text-blue-600 hover:text-blue-700">
-                    Voir la demande →
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Messages récents */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Messages récents</h2>
-              <MessageCircle className="h-5 w-5 text-gray-400" />
-            </div>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900">Sophie Martin</p>
-                  <p className="text-xs text-gray-600">Quand pouvez-vous passer ?</p>
-                </div>
-                <span className="text-xs text-gray-400">5 min</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900">Thomas Bernard</p>
-                  <p className="text-xs text-gray-600">Merci pour votre travail</p>
-                </div>
-                <span className="text-xs text-gray-400">1h</span>
-              </div>
-            </div>
-          </div>
+         
 
           {/* Calendrier mini */}
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">

@@ -1,6 +1,6 @@
 // ============================================================
 // data/profilMock.js
-// Données mockées pour le profil client ArtisanConnect
+// Données mockées pour le profil client 7rayfi
 // Prêt pour remplacement par API Laravel (Axios + React Query)
 // ============================================================
 

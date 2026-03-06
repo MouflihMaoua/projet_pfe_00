@@ -14,7 +14,7 @@ const REVIEWS = [
     {
         name: 'Sophia L.',
         role: 'Architecte · Rabat',
-        text: "En tant qu'architecte, je recommande ArtisanConnect à tous mes clients. Les profils sont complets, les avis authentiques et la prise de contact est simple.",
+        text: "En tant qu'architecte, je recommande 7rayfi à tous mes clients. Les profils sont complets, les avis authentiques et la prise de contact est simple.",
         rating: 5,
         tag: 'Menuiserie',
         initial: 'S',

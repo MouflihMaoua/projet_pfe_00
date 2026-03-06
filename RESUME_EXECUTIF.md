@@ -135,7 +135,7 @@
 
 | ID | Bug | Sévérité | Impact |
 |----|----|----------|--------|
-| 1 | Duplication routes `/artisan/:id` | Moyenne | Confusion code |
+| 1 | Duplication routes `/artisan/:id` (supprimé `/profil-artisan/:id`) | Résolu | Code unifié |
 | 2 | Chemin client + particulier mélangé | Haute | Navigation cassée |
 | 3 | Authentification mockée | **CRITIQUE** | Non fonctionnel |
 | 4 | Zéro données réelles (tout mock) | **CRITIQUE** | Non fonctionnel |

@@ -1,6 +1,7 @@
 // pages/artisan/messages/index.jsx
 import { useState, useRef, useEffect } from 'react';
 import { Search, Paperclip, Send, Image, MapPin, FileText, MoreVertical } from 'lucide-react';
+import { SERVICES_ARTISAN } from '../../../constants/services';
 
 export default function Messagerie() {
   const [selectedChat, setSelectedChat] = useState(1);
@@ -16,7 +17,7 @@ export default function Messagerie() {
       time: "10:30",
       unread: 2,
       online: true,
-      service: "Plomberie"
+      service: "Plombier"
     },
     {
       id: 2,
@@ -26,7 +27,7 @@ export default function Messagerie() {
       time: "09:15",
       unread: 0,
       online: false,
-      service: "Électricité"
+      service: "Électricien"
     },
     {
       id: 3,
@@ -36,7 +37,7 @@ export default function Messagerie() {
       time: "Hier",
       unread: 0,
       online: false,
-      service: "Chauffage"
+      service: "Technicien en électroménager et climatisation"
     }
   ];
 

@@ -1,5 +1,5 @@
 // src/components/public/SearchNavbar.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   Menu, X, Wrench, ChevronDown, User, MessageSquare, 
@@ -8,34 +8,15 @@ import {
 
 const NAV_LINKS = [
   { 
-    href: '/', 
-    label: 'Accueil',
-    icon: Home 
-  },
-  { 
-    href: '#how-it-works', 
-    label: 'Comment ça marche',
-    icon: Settings 
-  },
-  { 
-    href: '#categories', 
-    label: 'Catégories',
-    icon: Wrench 
-  },
-  { 
-    href: '#testimonials', 
-    label: 'Avis clients',
-    icon: MessageSquare 
-  },
-  { 
     href: '/recherche-artisan', 
     label: 'Rechercher Artisan',
     icon: Search 
   },
+  
   { 
-    href: '/dashboard/client', 
-    label: 'Tableau de Bord',
-    icon: Calendar 
+    href: '/', 
+    label: 'Accueil',
+    icon: Home 
   },
 ];
 
@@ -73,10 +54,8 @@ export default function SearchNavbar() {
             {/* Logo */}
             <div className="flex items-center">
               <Link to="/" className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-gradient-to-tr from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
-                  <Wrench size={24} className="text-white" />
-                </div>
-                <span className="text-xl font-bold text-gray-900">ArtisanConnect</span>
+                <img src="/assets/logo_app.png" alt="7rayfi_logo" className="w-16 h-16 object-contain" />
+                <span className="text-xl font-bold text-gray-900"></span>
               </Link>
             </div>
 
@@ -101,6 +80,8 @@ export default function SearchNavbar() {
 
             {/* Right side */}
             <div className="flex items-center gap-4">
+             
+
               {/* Notifications */}
               <button className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
                 <Bell size={20} className="text-gray-600" />
@@ -132,21 +113,21 @@ export default function SearchNavbar() {
                 {profileOpen && (
                   <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-2">
                     <Link
-                      to="/dashboard/client/profil"
+                      to="/dashboard/particulier/profil"
                       className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                     >
                       <User size={16} />
                       Mon profil
                     </Link>
                     <Link
-                      to="/dashboard/client/messages"
+                      to="/dashboard/particulier/messages"
                       className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                     >
                       <MessageSquare size={16} />
                       Messages
                     </Link>
                     <Link
-                      to="/dashboard/client/settings"
+                      to="/dashboard/particulier/settings"
                       className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                     >
                       <Settings size={16} />
@@ -173,10 +154,8 @@ export default function SearchNavbar() {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-gradient-to-tr from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
-                <Wrench size={24} className="text-white" />
-              </div>
-              <span className="text-xl font-bold text-gray-900">ArtisanConnect</span>
+              <img src="/assets/logo_app.png" alt="7rayfi_logo" className="w-14 h-14 object-contain" />
+              <span className="text-xl font-bold text-gray-900">7rayfi</span>
             </Link>
 
             {/* Mobile menu button */}
@@ -197,6 +176,16 @@ export default function SearchNavbar() {
         {isMobileOpen && (
           <div className="bg-white border-t border-gray-200">
             <div className="px-4 sm:px-6 py-4 space-y-2">
+              {/* Connexion button mobile */}
+              <Link
+                to="/connexion-choix"
+                onClick={() => setIsMobileOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 bg-brand-orange text-white rounded-lg font-medium"
+              >
+                <User size={20} />
+                Connexion
+              </Link>
+              
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.href}
@@ -229,7 +218,7 @@ export default function SearchNavbar() {
                 
                 <div className="space-y-2">
                   <Link
-                    to="/dashboard/client/profil"
+                    to="/dashboard/particulier/profil"
                     onClick={() => setIsMobileOpen(false)}
                     className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg"
                   >
@@ -237,7 +226,7 @@ export default function SearchNavbar() {
                     Mon profil
                   </Link>
                   <Link
-                    to="/dashboard/client/messages"
+                    to="/dashboard/particulier/messages"
                     onClick={() => setIsMobileOpen(false)}
                     className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg"
                   >

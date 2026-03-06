@@ -45,7 +45,7 @@ const Topbar = ({ onMenuClick }) => {
 
                     <div className="w-px h-10 bg-[#E2E8F0]" />
 
-                    <Link to="/dashboard/client/profil" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
+                    <Link to="/dashboard/particulier/profil" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
                         <div className="text-right hidden sm:block">
                             <p className="text-[#1C1917] font-bold text-sm leading-tight">Karim Bennani</p>
                             <p className="text-[#F97316] text-[10px] font-bold uppercase tracking-wider">Client Or</p>

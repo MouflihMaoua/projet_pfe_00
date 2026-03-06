@@ -7,7 +7,9 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 
-const HeroBanner = () => (
+const HeroBanner = () => {
+  
+  return (
     <motion.div
         whileHover={{ scale: 1.005 }}
         className="relative rounded-3xl bg-[#1E2D40] p-8 lg:p-12 overflow-hidden"
@@ -23,10 +25,10 @@ const HeroBanner = () => (
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight"
+                    className="text-4xl lg:text-5xl font-bold text-white leading-[1.1] mb-6 max-w-4xl mx-auto"
                 >
                     Ravi de vous revoir,{' '}
-                    <span className="text-[#F97316]">Karim</span> 👋
+                    <span className="text-[#F97316]">Karim</span> 
                 </motion.h1>
                 <motion.p
                     initial={{ opacity: 0, y: 10 }}
@@ -34,8 +36,7 @@ const HeroBanner = () => (
                     transition={{ delay: 0.3 }}
                     className="text-white/70 text-lg mb-8 max-w-xl"
                 >
-                    Vous avez <span className="font-bold text-white">2 réservations actives</span> pour cette
-                    semaine. Besoin d'un autre expert ?
+                    Vous avez 2 réservations actives pour cette semaine. Besoin d'un autre expert ?
                 </motion.p>
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
@@ -51,10 +52,10 @@ const HeroBanner = () => (
                         <ChevronRight size={18} />
                     </Link>
                     <Link
-                        to="/dashboard/client/missions"
+                        to="/dashboard/particulier/demandes"
                         className="inline-flex items-center px-8 py-4 rounded-full border-2 border-white/30 text-white font-bold text-sm uppercase tracking-wider hover:bg-white/10 transition-colors"
                     >
-                        Mes rendez-vous
+                        Mes Demandes
                     </Link>
                 </motion.div>
             </div>
@@ -75,6 +76,7 @@ const HeroBanner = () => (
             </motion.div>
         </div>
     </motion.div>
-);
+  );
+};
 
 export default HeroBanner;

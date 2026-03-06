@@ -50,7 +50,7 @@ const CTA = () => {
                         maxWidth: '600px',
                         margin: '0 auto'
                     }}>
-                        Rejoignez des milliers de marocains qui font confiance à ArtisanConnect pour leurs travaux.
+                        Rejoignez des milliers de marocains qui font confiance à 7rayfi pour leurs travaux.
                     </p>
 
                     <div style={{

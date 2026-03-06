@@ -1,18 +1,19 @@
 ﻿// src/pages/artisan/devis/index.jsx
 import { useState } from 'react';
-import { Search, Filter, FileText, Download, Send, Calendar, User, Mail, Phone, MapPin, CheckCircle, Clock, AlertCircle, Edit, Trash2, Eye } from 'lucide-react';
+import { Search, Filter, FileText, Download, Send, Calendar, User, Mail, Phone, MapPin, CheckCircle, Clock, AlertCircle, Edit, Trash2, Eye, Plus, X, XCircle } from 'lucide-react';
+import { SERVICES_ARTISAN, CATEGORIES_SERVICES } from '../../../constants/services';
 
 export default function DevisPage() {
   const [selectedDevis, setSelectedDevis] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('tous');
-
-  const devis = [
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [devisList, setDevisList] = useState([
     {
       id: 1,
       numero: "DEV-2024-001",
       client: "Sophie Martin",
-      service: "Plomberie",
+      service: "Plombier",
       description: "Réparation fuite d'eau cuisine",
       adresse: "15 Rue Hassan II, Casablanca",
       telephone: "06 12 34 56 78",
@@ -34,7 +35,7 @@ export default function DevisPage() {
       id: 2,
       numero: "DEV-2024-002",
       client: "Thomas Bernard",
-      service: "Électricité",
+      service: "Électricien",
       description: "Installation compteur électrique",
       adresse: "23 Avenue Mohammed V, Rabat",
       telephone: "06 98 76 54 32",
@@ -56,47 +57,97 @@ export default function DevisPage() {
       id: 3,
       numero: "DEV-2024-003",
       client: "Julie Dubois",
-      service: "Chauffage",
-      description: "Réparation chaudière",
-      adresse: "7 Boulevard Zerktouni, Marrakech",
+      service: "Peintre",
+      description: "Peinture salon et chambres",
+      adresse: "45 Boulevard Mohamed V, Marrakech",
       telephone: "06 45 67 89 01",
       email: "julie.dubois@email.com",
       dateCreation: "2024-01-20",
       dateValidite: "2024-01-27",
-      montantHT: 800,
-      montantTTC: 960,
+      montantHT: 3500,
+      montantTTC: 4200,
       statut: "brouillon",
       tva: 20,
-      delai: "3 heures",
-      notes: "Diagnostic inclus",
+      delai: "5 jours",
+      notes: "Peinture écologique",
       articles: [
-        { description: "Diagnostic chaudière", quantite: 1, prixUnitaire: 300, total: 300 },
-        { description: "Pièces de rechange", quantite: 1, prixUnitaire: 500, total: 500 }
+        { description: "Préparation des murs", quantite: 1, prixUnitaire: 800, total: 800 },
+        { description: "Peinture 2 couches", quantite: 1, prixUnitaire: 2700, total: 2700 }
       ]
     }
-  ];
+  ]);
 
-  const filteredDevis = devis.filter(devis => {
-    const matchesSearch = devis.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         devis.service.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         devis.numero.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterStatus === 'tous' || devis.statut === filterStatus;
-    return matchesSearch && matchesFilter;
+  // État pour le nouveau devis
+  const [newDevis, setNewDevis] = useState({
+    nomParticulier: '',
+    adresse: '',
+    roleArtisan: '',
+    prix: ''
   });
 
+  const rolesArtisan = SERVICES_ARTISAN;
+
   const getStatusColor = (statut) => {
-    switch (statut) {
-      case 'brouillon': return 'bg-gray-100 text-gray-800';
-      case 'envoyé': return 'bg-blue-100 text-blue-800';
-      case 'accepté': return 'bg-green-100 text-green-800';
-      case 'refusé': return 'bg-red-100 text-red-800';
-      case 'expiré': return 'bg-orange-100 text-orange-800';
-      default: return 'bg-gray-100 text-gray-800';
+    switch(statut) {
+      case 'brouillon': return 'bg-gray-100 text-gray-700';
+      case 'envoyé': return 'bg-blue-100 text-blue-700';
+      case 'accepté': return 'bg-green-100 text-green-700';
+      case 'refusé': return 'bg-red-100 text-red-700';
+      case 'expiré': return 'bg-orange-100 text-orange-700';
+      default: return 'bg-gray-100 text-gray-700';
     }
   };
 
   const handleEnvoyer = (id) => {
-    console.log('Devis envoyé:', id);
+    setDevisList(devisList.map(devis => 
+      devis.id === id ? { ...devis, statut: 'envoyé' } : devis
+    ));
+  };
+
+  const handleAddDevis = () => {
+    if (newDevis.nomParticulier && newDevis.adresse && newDevis.roleArtisan && newDevis.prix) {
+      const today = new Date().toISOString().split('T')[0];
+      const newId = Math.max(...devisList.map(d => d.id)) + 1;
+      
+      const devis = {
+        id: newId,
+        numero: `DEV-${new Date().getFullYear()}-${String(newId).padStart(3, '0')}`,
+        client: newDevis.nomParticulier,
+        service: newDevis.roleArtisan,
+        description: `Service de ${newDevis.roleArtisan}`,
+        adresse: newDevis.adresse,
+        telephone: "",
+        email: "",
+        dateCreation: today,
+        dateValidite: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        montantHT: parseFloat(newDevis.prix),
+        montantTTC: parseFloat(newDevis.prix) * 1.2,
+        statut: "brouillon",
+        tva: 20,
+        delai: "À définir",
+        notes: "",
+        articles: [
+          { description: `Service de ${newDevis.roleArtisan}`, quantite: 1, prixUnitaire: parseFloat(newDevis.prix), total: parseFloat(newDevis.prix) }
+        ]
+      };
+
+      setDevisList([...devisList, devis]);
+      setNewDevis({ nomParticulier: '', adresse: '', roleArtisan: '', prix: '' });
+      setShowAddModal(false);
+    }
+  };
+
+  const handleView = (devis) => {
+    setSelectedDevis(devis);
+  };
+
+  const handleEdit = (id) => {
+    console.log('Modifier devis:', id);
+    // Ouvrir le modal d'édition
+  };
+
+  const handleSend = (id) => {
+    console.log('Envoyer devis:', id);
     // Envoyer le devis par email
   };
 
@@ -106,9 +157,16 @@ export default function DevisPage() {
   };
 
   const handleSupprimer = (id) => {
-    console.log('Devis supprimé:', id);
-    // Supprimer le devis
+    setDevisList(devisList.filter(devis => devis.id !== id));
   };
+
+  const filteredDevis = devisList.filter(devis => {
+    const matchesSearch = devis.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         devis.service.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         devis.numero.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter = filterStatus === 'tous' || devis.statut === filterStatus;
+    return matchesSearch && matchesFilter;
+  });
 
   return (
     <div className="p-6">
@@ -118,8 +176,11 @@ export default function DevisPage() {
           <h1 className="text-2xl font-bold text-gray-900">Devis</h1>
           <p className="text-gray-600">Gérez vos devis et estimations</p>
         </div>
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
-          <FileText className="h-4 w-4" />
+        <button 
+          onClick={() => setShowAddModal(true)}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+        >
+          <Plus className="h-4 w-4" />
           Nouveau devis
         </button>
       </div>
@@ -244,6 +305,107 @@ export default function DevisPage() {
       {filteredDevis.length === 0 && (
         <div className="text-center py-12">
           <p className="text-gray-500">Aucun devis trouvé</p>
+        </div>
+      )}
+
+      {/* Modal d'ajout de devis */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-gray-900">Nouveau Devis</h2>
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Nom du particulier *
+                </label>
+                <input
+                  type="text"
+                  value={newDevis.nomParticulier}
+                  onChange={(e) => setNewDevis({...newDevis, nomParticulier: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  placeholder="Entrez le nom du client"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Adresse *
+                </label>
+                <input
+                  type="text"
+                  value={newDevis.adresse}
+                  onChange={(e) => setNewDevis({...newDevis, adresse: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  placeholder="Entrez l'adresse du client"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Rôle de l'artisan *
+                </label>
+                <select
+                  value={newDevis.roleArtisan}
+                  onChange={(e) => setNewDevis({...newDevis, roleArtisan: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Sélectionnez un rôle</option>
+                  {rolesArtisan.map((role, index) => (
+                    <option key={index} value={role}>{role}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Prix (DH) *
+                </label>
+                <input
+                  type="number"
+                  value={newDevis.prix}
+                  onChange={(e) => setNewDevis({...newDevis, prix: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  placeholder="Entrez le prix du devis"
+                  min="0"
+                  step="0.01"
+                />
+              </div>
+
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <p className="text-sm text-gray-600">
+                  <strong>Date de création:</strong> {new Date().toLocaleDateString('fr-FR')}
+                </p>
+                <p className="text-sm text-gray-600">
+                  <strong>Date de validité:</strong> {new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR')}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleAddDevis}
+                disabled={!newDevis.nomParticulier || !newDevis.adresse || !newDevis.roleArtisan || !newDevis.prix}
+                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+              >
+                Créer le devis
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

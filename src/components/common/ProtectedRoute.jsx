@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
         const redirectPath = role === 'admin' ? '/admin' :
             role === 'artisan' ? '/dashboard/artisan' :
                 role === 'particulier' ? '/dashboard/particulier' :
-                    '/dashboard/client';
+                    '/dashboard/particulier';
         return <Navigate to={redirectPath} replace />;
     }
 
