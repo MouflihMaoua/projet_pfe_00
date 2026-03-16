@@ -33,7 +33,10 @@ export default function UploadPhotoModal({
         if (prev >= 100) {
           clearInterval(interval);
           setUploading(false);
-          onUploadSuccess(file);
+          // Utiliser setTimeout pour éviter l'appel pendant le rendu
+          setTimeout(() => {
+            onUploadSuccess(file);
+          }, 0);
           return 100;
         }
         return prev + 10;

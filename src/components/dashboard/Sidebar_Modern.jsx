@@ -4,7 +4,7 @@
  */
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, CalendarDays, MessageSquare, UserCircle, LogOut, 
   Wrench, X, Home, Settings, TrendingUp, Award, ChevronDown,
@@ -45,8 +45,14 @@ const menuItems = [
 
 const Sidebar = ({ isOpen, onClose, onMenuClick }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const logout = useAuthStore((state) => state.logout);
   const [expandedItem, setExpandedItem] = useState(null);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   const isActive = (path) => {
     if (path === '/dashboard/particulier') {
@@ -190,24 +196,12 @@ const Sidebar = ({ isOpen, onClose, onMenuClick }) => {
               Autres
             </h3>
             
-            <Link
-              to="/dashboard/particulier/settings"
-              onClick={onClose}
-              className="group flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-300"
-            >
-              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 group-hover:bg-gray-200 transition-all duration-300">
-                <Settings size={20} className="text-gray-600" />
-              </div>
-              <div className="flex-1">
-                <span className="font-medium text-sm">Paramètres</span>
-                <p className="text-xs text-gray-500 mt-0.5">Préférences et compte</p>
-              </div>
-            </Link>
+            
 
             <button
               onClick={() => {
                 if (window.confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
-                  logout();
+                  handleLogout();
                   alert('Votre compte a été supprimé avec succès.');
                 }
               }}
@@ -218,7 +212,6 @@ const Sidebar = ({ isOpen, onClose, onMenuClick }) => {
               </div>
               <div className="flex-1 text-left">
                 <span className="font-medium text-sm">Supprimer mon compte</span>
-                <p className="text-xs text-red-500 mt-0.5">Action irréversible</p>
               </div>
             </button>
 
@@ -244,7 +237,7 @@ const Sidebar = ({ isOpen, onClose, onMenuClick }) => {
 
           {/* Déconnexion */}
           <button
-            onClick={logout}
+            onClick={handleLogout}
             className="flex items-center gap-3 w-full p-3 rounded-xl text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-300 group"
           >
             <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-red-100 group-hover:bg-red-200 transition-all duration-300">

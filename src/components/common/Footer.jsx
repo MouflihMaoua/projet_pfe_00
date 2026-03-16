@@ -12,7 +12,7 @@ const Footer = () => {
                         <Link to="/" className="flex items-center space-x-2">
                             <img src="/assets/logo_app.png" alt="7rayfi" className="w-12 h-12" />
                             <span className="font-bold text-2xl tracking-tight">
-                                7ray<span className="text-brand-orange">fi</span>
+                                7rayfi<span className="text-brand-orange">fi</span>
                             </span>
                         </Link>
                         <p className="text-gray-400 leading-relaxed">

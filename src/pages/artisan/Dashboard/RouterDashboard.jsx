@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Routes, Route, Navigate, useLocation, Link } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, Link, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Mail, 
@@ -15,6 +15,7 @@ import {
   LogOut,
   ChevronDown
 } from 'lucide-react';
+import { useAuthStore } from '../../../store/useAuthStore';
 import ArtisanHome from './ArtisanHome';
 import ArtisanMessages from '../messages';
 import ArtisanCalendrier from '../calendrier';
@@ -25,8 +26,10 @@ import ArtisanProfil from '../profil';
 
 const ArtisanDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout } = useAuthStore();
 
   const menuItems = [
     { label: 'Tableau de bord', icon: LayoutDashboard, path: '/dashboard/artisan' },
@@ -46,6 +49,11 @@ const ArtisanDashboard = () => {
   const getTitle = () => {
     const currentItem = menuItems.find(item => isActive(item.path));
     return currentItem ? currentItem.label : 'Tableau de bord';
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
   return (
@@ -89,7 +97,10 @@ const ArtisanDashboard = () => {
 
         {/* Logout */}
         <div className="p-4 border-t border-slate-700">
-          <button className="w-full flex items-center space-x-3 px-4 py-3 text-slate-300 hover:bg-slate-700 rounded-lg transition">
+          <button 
+            onClick={handleLogout}
+            className="w-full flex items-center space-x-3 px-4 py-3 text-slate-300 hover:bg-slate-700 rounded-lg transition"
+          >
             <LogOut size={20} className="flex-shrink-0" />
             <span className={`${!sidebarOpen && 'hidden'} whitespace-nowrap`}>Déconnexion</span>
           </button>
@@ -113,7 +124,7 @@ const ArtisanDashboard = () => {
             </button>
             <div className="flex items-center space-x-2 relative">
               <button
-                onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                 className="flex items-center space-x-2 px-3 py-2 hover:bg-gray-100 rounded-lg transition"
               >
                 <img
@@ -124,12 +135,17 @@ const ArtisanDashboard = () => {
                 <span className="text-sm font-medium text-gray-700">Ahmed</span>
                 <ChevronDown size={16} className="text-gray-500" />
               </button>
-              {profileMenuOpen && (
+              {profileDropdownOpen && (
                 <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50 min-w-max">
                   <Link to="/dashboard/artisan/profil" className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700">Mon profil</Link>
                   <Link to="/dashboard/artisan/settings" className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700">Paramètres</Link>
                   <hr className="my-1" />
-                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-red-600">Déconnexion</button>
+                  <button 
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-red-600"
+                  >
+                    Déconnexion
+                  </button>
                 </div>
               )}
             </div>

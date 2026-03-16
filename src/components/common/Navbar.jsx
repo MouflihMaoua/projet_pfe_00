@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, User, Bell, LogOut, Search } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { cn } from '../../utils/cn';
@@ -9,6 +9,7 @@ const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const { isAuthenticated, user, logout, role } = useAuthStore();
     const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -51,6 +52,12 @@ const Navbar = () => {
         } else {
             window.location.href = href;
         }
+    };
+
+    const handleLogout = () => {
+        logout();
+        setIsOpen(false);
+        navigate('/');
     };
 
     const getDashboardLink = () => {
@@ -103,7 +110,7 @@ const Navbar = () => {
                                     <span>Mon Compte</span>
                                 </Link>
                                 <button
-                                    onClick={logout}
+                                    onClick={handleLogout}
                                     className={cn(
                                         "p-2 transition-colors hover:text-red-500",
                                         isScrolled || location.pathname !== '/' ? "text-brand-navy/70" : "text-white/70"
@@ -196,10 +203,7 @@ const Navbar = () => {
                                 Tableau de bord
                             </Link>
                             <button
-                                onClick={() => {
-                                    logout();
-                                    setIsOpen(false);
-                                }}
+                                onClick={handleLogout}
                                 className="flex items-center justify-center w-full px-4 py-5 text-red-500 font-bold text-lg"
                             >
                                 <LogOut size={20} className="mr-3" />

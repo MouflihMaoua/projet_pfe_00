@@ -12,6 +12,7 @@ import { motion } from "framer-motion";
 import { User, Edit2, Save, X } from "lucide-react";
 import CardWrapper, { CardHeader, CardBody } from "./CardWrapper";
 import FloatingInput from "./FloatingInput";
+import { profileService } from "../../services/profileService-demo";
 
 // ── Schéma de validation Zod ──────────────────────────────
 const schema = z.object({
@@ -44,8 +45,11 @@ const schema = z.object({
  * @param {object}   user       - Données utilisateur
  * @param {function} onSuccess  - Callback succès sauvegarde → déclenche toast
  */
-const InfoPersonnellesCard = ({ user, onSuccess }) => {
+const InfoPersonnellesCard = ({ user, onSuccess, userType }) => {
   const [isEditing, setIsEditing] = useState(false);
+
+  console.log(" InfoPersonnellesCard - user:", user);
+  console.log(" InfoPersonnellesCard - userType:", userType);
 
   const {
     register,
@@ -56,11 +60,11 @@ const InfoPersonnellesCard = ({ user, onSuccess }) => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      prenom:    user.prenom,
-      nom:       user.nom,
-      email:     user.email,
-      telephone: user.telephone,
-      cin:       user.cin,
+      prenom: user?.prenom || "",
+      nom: user?.nom || "",
+      email: user?.email || "",
+      telephone: user?.telephone || "",
+      cin: user?.cin || "",
     },
     mode: "onChange", // Validation en temps réel
   });
@@ -69,11 +73,20 @@ const InfoPersonnellesCard = ({ user, onSuccess }) => {
 
   // ── Soumission ─────────────────────────────────────────────
   const onSubmit = async (data) => {
-    // Simule un appel API (remplacer par Axios + React Query)
-    await new Promise((r) => setTimeout(r, 600));
-    console.log("Sauvegarde infos personnelles:", data);
-    setIsEditing(false);
-    onSuccess?.("Informations personnelles mises à jour !");
+    try {
+      // Appel réel à Supabase via profileService
+      if (userType === 'artisan') {
+        await profileService.updateArtisanProfile(user.id, data);
+      } else {
+        await profileService.updateParticulierProfile(user.id, data);
+      }
+      
+      setIsEditing(false);
+      onSuccess?.("Informations personnelles mises à jour !");
+    } catch (error) {
+      console.error("❌ Erreur mise à jour infos personnelles:", error);
+      onSuccess?.("Erreur lors de la mise à jour");
+    }
   };
 
   // ── Annuler → réinitialiser le form ───────────────────────

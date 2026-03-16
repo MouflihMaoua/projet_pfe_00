@@ -1,25 +1,51 @@
 import React from "react";
 import { BarChart3, Heart, Star } from "lucide-react";
 
-const ProfileStats = ({ stats }) => {
-  const statItems = [
+const ProfileStats = ({ user, userType }) => {
+  console.log(" ProfileStats - user:", user);
+  console.log(" ProfileStats - userType:", userType);
+  
+  // Données dynamiques basées sur le profil utilisateur
+  const statItems = userType === 'artisan' ? [
     {
       label: "Missions complétées",
-      value: stats?.completedMissions || "0",
+      value: user?.missions_completees || "0",
       icon: BarChart3,
       color: "text-blue-600",
       bgColor: "bg-blue-50",
     },
     {
+      label: "Années d'expérience",
+      value: user?.annee_experience || "0",
+      icon: Star,
+      color: "text-yellow-600",
+      bgColor: "bg-yellow-50",
+    },
+    {
+      label: "Statut validation",
+      value: user?.statut_validation ? "Validé" : "En attente",
+      icon: Heart,
+      color: user?.statut_validation ? "text-green-600" : "text-orange-600",
+      bgColor: user?.statut_validation ? "bg-green-50" : "bg-orange-50",
+    },
+  ] : [
+    {
       label: "Artisans favoris",
-      value: stats?.favoritesCount || "0",
+      value: user?.artisans_favoris || "0",
       icon: Heart,
       color: "text-red-600",
       bgColor: "bg-red-50",
     },
     {
+      label: "Missions postées",
+      value: user?.missions_postees || "0",
+      icon: BarChart3,
+      color: "text-blue-600",
+      bgColor: "bg-blue-50",
+    },
+    {
       label: "Avis donnés",
-      value: stats?.reviewsCount || "0",
+      value: user?.avis_donnés || "0",
       icon: Star,
       color: "text-yellow-600",
       bgColor: "bg-yellow-50",

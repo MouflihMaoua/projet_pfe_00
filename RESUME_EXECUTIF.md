@@ -24,9 +24,9 @@
 | **Routing** | React Router DOM 7.13.0 |
 | **Icons** | Lucide React 0.575.0 |
 | **Calendar** | FullCalendar 6.1.20 |
-| **Chat/Real-time** | socket.io-client (not implemented) |
+| **Chat/Real-time** | socket.io-client (✅ IMPLEMENTED) |
 | **i18n** | i18next (FR/AR setup exists) |
-| **Dev Server** | Port 5177 |
+| **Dev Server** | Port 5178 |
 | **Build** | Vite (ES modules) |
 | **Language** | JSX/JavaScript ES6+ |
 

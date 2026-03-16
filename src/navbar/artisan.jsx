@@ -14,7 +14,7 @@ import {
   Bell
 } from 'lucide-react';
 
-export default function ArtisanLayout({ children }) {
+export default function artisan({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const menuItems = [
@@ -23,7 +23,6 @@ export default function ArtisanLayout({ children }) {
     { label: 'Calendrier', icon: Calendar, path: '#/artisan/calendrier' },
     { label: 'Demandes', icon: FileText, path: '#/artisan/demandes' },
     { label: 'Devis', icon: FileText, path: '#/artisan/devis' },
-    { label: 'Interventions', icon: Wrench, path: '#/artisan/interventions' },
     { label: 'Revenus', icon: TrendingUp, path: '#/artisan/revenus' },
     { label: 'Profil', icon: User, path: '#/artisan/profil' },
     { label: 'Paramètres', icon: Settings, path: '#/artisan/settings' },

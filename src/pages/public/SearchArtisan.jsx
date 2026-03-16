@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, MapPin, Filter, Star, Phone, MessageSquare, ChevronRight, X, Clock, CheckCircle, Award, TrendingUp, Send } from 'lucide-react';
-import SearchNavbar from '../../components/public/SearchNavbar';
 import { SERVICES_ARTISAN } from '../../constants/services';
 
 const artisansData = [
@@ -304,14 +303,6 @@ const SearchArtisan = () => {
 
         {/* Actions */}
         <div className="flex gap-2">
-          <button className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm">
-            <Phone size={16} />
-            <span>Contacter</span>
-          </button>
-          <button className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm">
-            <MessageSquare size={16} />
-            <span>Message</span>
-          </button>
           <button 
             onClick={() => handleOpenDemandeModal(artisan)}
             className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm"
@@ -326,10 +317,9 @@ const SearchArtisan = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <SearchNavbar />
       
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 mt-16">
+      <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">

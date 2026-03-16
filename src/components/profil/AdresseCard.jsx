@@ -12,6 +12,7 @@ import { motion } from "framer-motion";
 import { MapPin, Edit2, Save, X } from "lucide-react";
 import CardWrapper, { CardHeader, CardBody } from "./CardWrapper";
 import FloatingInput from "./FloatingInput";
+import { profileService } from "../../services/profileService-demo";
 
 // ── Schéma de validation Zod ──────────────────────────────
 const schema = z.object({
@@ -31,8 +32,11 @@ const schema = z.object({
  * @param {object}   user       - Données utilisateur
  * @param {function} onSuccess  - Callback succès → toast
  */
-const AdresseCard = ({ user, onSuccess }) => {
+const AdresseCard = ({ user, onSuccess, userType }) => {
   const [isEditing, setIsEditing] = useState(false);
+
+  console.log(" AdresseCard - user:", user);
+  console.log(" AdresseCard - userType:", userType);
 
   const {
     register,
@@ -43,8 +47,8 @@ const AdresseCard = ({ user, onSuccess }) => {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      ville:      user.ville,
-      codePostal: user.codePostal,
+      ville:      user?.ville || "",
+      codePostal: user?.codePostal || "",
     },
     mode: "onChange",
   });
@@ -53,10 +57,20 @@ const AdresseCard = ({ user, onSuccess }) => {
 
   // ── Soumission ─────────────────────────────────────────────
   const onSubmit = async (data) => {
-    await new Promise((r) => setTimeout(r, 600));
-    console.log("Sauvegarde adresse:", data);
-    setIsEditing(false);
-    onSuccess?.("Adresse mise à jour !");
+    try {
+      // Appel réel à Supabase via profileService
+      if (userType === 'artisan') {
+        await profileService.updateArtisanProfile(user.id, data);
+      } else {
+        await profileService.updateParticulierProfile(user.id, data);
+      }
+      
+      setIsEditing(false);
+      onSuccess?.("Adresse mise à jour !");
+    } catch (error) {
+      console.error("❌ Erreur mise à jour adresse:", error);
+      onSuccess?.("Erreur lors de la mise à jour");
+    }
   };
 
   const handleCancel = () => {
