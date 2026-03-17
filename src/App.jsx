@@ -1,33 +1,29 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { queryClient } from './lib/react-query';
-import MainLayout from './navbar/MainLayout';
-import ProtectedRoute from './components/common/ProtectedRoute';
-import { supabase } from './services/supabaseClient';
-import AuthCallback from './pages/public/AuthCallback';
-import RegisterManual from './pages/RegisterManual';
-import RegisterGoogle from './pages/public/RegisterGoogle'; 
+import { queryClient } from './core/lib/react-query';
+import MainLayout from './shared/navbar/MainLayout';
+import ProtectedRoute from "./shared/components/ProtectedRoute";
+import { supabase } from './core/services/supabaseClient';
+import AuthCallback from './shared/pages/AuthCallback';
+import RegisterGoogle from './shared/pages/RegisterGoogle.jsx'; 
 
 
 // ── Pages publiques ───────────────────────────────────────
-const Home          = lazy(() => import('./pages/public/Home'));
-const Search        = lazy(() => import('./pages/public/Search'));
-const SearchArtisan = lazy(() => import('./pages/public/SearchArtisan'));
-const ArtisanProfile = lazy(() => import('./pages/public/ArtisanProfile'));
-const ReputationPublic = lazy(() => import('./components/artisan/ReputationArtisanPublic'));
-const ValidationDemo = lazy(() => import('./pages/public/ValidationDemo'));
+const Home          = lazy(() => import('./shared/pages/Home.jsx'));
+const Search        = lazy(() => import('./shared/pages/Search.jsx'));
+const SearchArtisan = lazy(() => import('./shared/pages/SearchArtisan.jsx'));
+const ArtisanProfile = lazy(() => import('./shared/pages/ArtisanProfile.jsx'));
+const ReputationPublic = lazy(() => import('./artisan/components/ReputationArtisanPublic'));
 
 // ProfilArtisanPublic removed as route duplicate
-const Login         = lazy(() => import('./pages/LoginPage'));
-const Register      = lazy(() => import('./pages/RegisterManual'));
-const ChatPage      = lazy(() => import('./pages/ChatPage'));
-const ForgotPassword = lazy(() => import('./pages/public/ForgotPassword'));
+const Login         = lazy(() => import('./shared/pages/Login.jsx'));
+const Register      = lazy(() => import('./shared/pages/RegisterGoogle.jsx'));
+const ForgotPassword = lazy(() => import('./shared/pages/ForgotPassword.jsx'));
 
 // ── Dashboards ────────────────────────────────────────────
-const ClientDashboard  = lazy(() => import('./pages/particulier/DashboardClient'));
-const ArtisanDashboard = lazy(() => import('./pages/artisan/Dashboard'));
-const AdminDashboard   = lazy(() => import('./pages/admin/Dashboard'));
+const ClientDashboard  = lazy(() => import('./particulier/pages/DashboardClient'));
+const ArtisanDashboard = lazy(() => import('./artisan/pages/Dashboard'));
 
 // ── Todos Page (Test Supabase) ─────────────────────────────
 function TodosPage() {
@@ -78,7 +74,6 @@ function App() {
 
             {/* ── Routes Publiques ────────────────────── */}
             <Route path="/"           element={<MainLayout><Home /></MainLayout>} />
-            <Route path="/validation-demo" element={<MainLayout><ValidationDemo /></MainLayout>} />
             
             {/* NOTE: `/profil-artisan/:id` route removed - duplicate of /artisan/:id */}
             <Route path="/reputation-artisan-public" element={<MainLayout><ReputationPublic /></MainLayout>} />
@@ -86,9 +81,7 @@ function App() {
             <Route path="/inscription" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/chat" element={<ChatPage />} />
-            <Route path="/chat/:roomId" element={<ChatPage />} />
-            <Route path="/todos" element={<TodosPage />} />
+                        <Route path="/todos" element={<TodosPage />} />
             <Route path="/mot-de-passe-oublie" element={<ForgotPassword />} />
 
             {/* ── Routes Particulier (anciennement 'client') ───────────────────────── */}
@@ -116,13 +109,7 @@ function App() {
               </ProtectedRoute>
             } />
 
-            {/* ── Routes Admin ────────────────────────── */}
-            <Route path="/dashboard/admin/*" element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminDashboard />
-              </ProtectedRoute>
-            } />
-            {/* callback Google */}
+                        {/* callback Google */}
             <Route path="/inscription-google" element={<RegisterGoogle />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
 
